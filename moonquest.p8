@@ -5,7 +5,6 @@ __lua__
 
 --todo
 --1. refactor code (objects using tables)
---2. fix dx collisions
 game={}
 
 function _init()
@@ -108,7 +107,8 @@ function game_draw()
 	moon_draw()
 
 	if deaths>0 then
-	 print("deaths:"..deaths,cam.x+2,cam.y+120,8)
+	 print("deaths:"..deaths,cam.x+2,cam.y+121,8)
+	 print("deaths:"..deaths,cam.x+2,cam.y+120,7)
 	end
 	--debug
 	if debug_on then
