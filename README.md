@@ -1,6 +1,6 @@
 # MOON QUEST
 
-<img src="cover.png" height="240" width="240">
+<img src="cover.png">
 
 ## Description:
  A dead simple percision platformer for the PICO-8 fantasy console. The project is still very much an alpha build and a work in progress, and I will soon implement features such as moving hazards and a victory screen. All code is written for the PICO-8 fantasy console, which uses LUA as its base.
