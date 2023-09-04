@@ -1,23 +1,78 @@
-game={}
+-- Variable to store current game state
+local current_state
+
+-- Game state modules
+local game = {}
+local menu = {}
+
+-- Declare player variable as global
+local player = {}
 
 function _init()
 	init_vars()
-	show_menu()
+    current_state = menu
+    current_state.init()
+	--show_menu()
 end
 
 function _update()
-	game.upd()
+    current_state.update()
 end
 
 function _draw()
- game.drw()
+    current_state.draw()
 end
 
+function menu.init()
+    music(63)
+    --game.upd=menu_update
+    --game.drw=menu_draw
+    blink = {
+        color = {0,2,8,7,8,2},
+        i=0,
+        f=0,
+        s=5
+    }
+    start_game = false
+    flashes_remaining = 5
+end
+
+function menu.update()
+    if btnp(4) or btnp(5) then
+		start_game = true
+		blink.s = 1
+	end
+	blink.f += 1
+	if blink.f % blink.s == 0 then
+		if blink.i + 1 > #blink.color then
+		    blink.i = 0
+		else
+		    blink.i += 1
+		end
+	end
+	if start_game == true and blink.i == 0 then
+		flashes_remaining -= 1
+		if flashes_remaining == 0 then
+			--mode="game"
+			--show_game()
+            current_state = game
+            current_state.init()
+		end
+	end
+end
+
+function menu.draw()
+    cls()
+	sspr(12*8,0,32,32,28,24,64,64)
+	print("~press ❎ to start~",30,100,blink.colr[blink.i])
+end
+
+--[[
 function show_menu()
  music(63)
  game.upd=menu_update
  game.drw=menu_draw
- blnk={
+ blink={
   colr={0,2,8,7,8,2},
   i=0,
   f=0,
@@ -30,17 +85,17 @@ end
 function menu_update()
 	if btnp(4) or btnp(5) then
 		st=true
-		blnk.s=1
+		blink.s=1
 	end
-	blnk.f+=1
-	if blnk.f%blnk.s==0 then
-		if blnk.i+1>#blnk.colr then
-		 blnk.i=0
+	blink.f+=1
+	if blink.f%blink.s==0 then
+		if blink.i+1>#blink.colr then
+		 blink.i=0
 		else
-		 blnk.i+=1
+		 blink.i+=1
 		end
 	end
-	if st==true and blnk.i==0 then
+	if st==true and blink.i==0 then
 		fl_num-=1
 		if fl_num==0 then
 			mode="game"
@@ -49,13 +104,37 @@ function menu_update()
 	end
 end
 
+
+
 function menu_draw()
 	cls()
 	sspr(12*8,0,32,32,28,24,64,64)
-	print("press ❎ to start",30,100,blnk.colr[blnk.i])
+	print("press ❎ to start",30,100,blink.colr[blink.i])
 end
+]]--
 -->8
 --game
+function game.init()
+    deaths=0
+	--game.upd=game_update
+	--game.drw=game_draw
+	music(0)
+	gfx={}
+	moons=0
+	moon={}
+	add_moon(40,30)
+	add_moon(34*8,48*8)
+	flag={}
+	add_flag(3,46)
+	add_flag(45,41)
+	add_flag(69,60)
+	add_flag(60,7)
+	add_flag(55,22)
+    player = player_init(8,512-32)
+	game_reset()
+end
+
+--[[
 function show_game()
 	deaths=0
 	game.upd=game_update
@@ -74,7 +153,36 @@ function show_game()
 	add_flag(55,22)
 	game_reset()
 end
+]]--
 
+function game.update()
+    player_update()
+	player_animate()
+	for u in all(umb) do
+	 u:update()
+	end
+	cam_update()
+	
+	for m in all(moon) do
+	 m:update()
+	end
+	for f in all(flag) do
+	 f:update()
+	end
+	for r in all(rain) do
+	 r:update()
+	end
+	for g in all(gfx) do
+	 g:update()
+	end
+	
+    --debug
+	if debug_on then
+		debug_update()
+	end
+end
+
+--[[
 function game_update()
 	player_update()
 	player_animate()
@@ -100,9 +208,50 @@ function game_update()
 	if debug_on then
 		debug_update()
 	end
+]]--
+
+function game.draw()
+    cls(0)
+	for r in all(rain) do
+	 r:draw()
+	end
+	map(0,0)
+	print("jump : ❎",1*8,59*8,7)
+	print("float : ❎ [while falling]",24*8,59*8,7)
+	for u in all(umb) do
+	 u:draw()
+	end
+	for m in all(moon) do
+	 m:draw()
+	end
+	for f in all(flag) do
+	 f:draw()
+	end
+	spr(player.sp,player.x,player.y,1,1,player.flp)
+	drw_flt_mtr()
 	
+ for i=1,#enm do
+  local myenm=enm[i]
+  spr(myenm.spr,myenm.x,myenm.y)	
+	end
+	 
+
+	if deaths>0 then
+	 print("deaths:"..deaths,cam.x+2,cam.y+121,8)
+	 print("deaths:"..deaths,cam.x+2,cam.y+120,7)
+	end
+	
+	drw_mns(moons,2)
+	for g in all(gfx) do
+	 g:draw()
+	end
+	--debug
+	if debug_on then
+	 debug_draw()
+	end
 end
 
+--[[
 function game_draw()
 	cls(0)
 	for r in all(rain) do
@@ -145,67 +294,64 @@ function game_draw()
 	
 	
 end
+]]--
 
 function game_reset()
- local px,py,flg_spwn=false
- for f in all(flag) do
-  if f.up==true then
-   px=f.x
-   py=f.y
-   flg_spawn=true
-  end
- end
- if not flg_spawn then
-  player_init(8,512-32)
-  cam_init(8,512-32)
- else
-  cam_init(px,py)
-	 player_init(px,py)
-	end
-	
-	umb={}
-	add_umb()
-	
-	rain={}
-	for i=1,100 do
-	 add_rain()
-	end
-	
-	enm={}
-	local my_en={}
-	my_en.x=90
-	my_en.y=20
-	my_en.spr=54
-	add(enm,my_en)
-	
+    local px,py,flg_spwn=false
+    for f in all(flag) do
+        if f.up==true then
+            px=f.x
+            py=f.y
+            flg_spawn=true
+        end
+    end
+    if not flg_spawn then
+        player_init(8,512-32)
+        cam_init(8,512-32)
+    else
+        cam_init(px,py)
+        player_init(px,py)
+    end
+    umb={}
+    add_umb()
+    rain={}
+    for i=1,100 do
+        add_rain()
+    end
+    enm={}
+    local my_en={}
+    my_en.x=90
+    my_en.y=20
+    my_en.spr=54
+    add(enm,my_en)
 end
 -->8
 --player
 function player_init(_x,_y)
- player={
-	 sp=1,--sprite
-	 x=_x,
-	 y=_y,
-	 w=8,
-	 h=8,
-	 flp=false, 
-	 dx=0,
-	 dy=0,
-	 max_dx=3.6,
-	 umb_dy=1,
-	 flt_mtr=10,
-	 max_dy=4,
-	 acc=0.7,
-	 boost=5,
-	 wljmp_frc=5,
-	 wljmp_dx=5,
-	 wljmp_dy=5,
-	 wlclm_dy=5,
-	 anim=0,
-	 hb={
-	  x1=0, y1=0,
-	  x2=7, y2=7
-	 },
+    player={
+        sp=1,--sprite
+        x=_x,
+        y=_y,
+        w=8,
+        h=8,
+        flp=false, 
+        dx=0,
+        dy=0,
+        max_dx=3.6,
+        umb_dy=1,
+        flt_mtr=10,
+        max_dy=4,
+        acc=0.7,
+        boost=5,
+        wljmp_frc=5,
+        wljmp_dx=5,
+        wljmp_dy=5,
+        wlclm_dy=5,
+        anim=0,
+        hb={
+            x1=0, y1=0,
+            x2=7, y2=7
+	    },
 		running=false,
 		jumping=false,
 		sliding=false,
@@ -215,12 +361,13 @@ function player_init(_x,_y)
 		prev_wall="none",
 		--debug
 		db={
-		 x1r=0, y1r=0,
-		 x2r=0, y2r=0,
-		 c_u=false, c_d=false,
-		 c_l=false, c_r=false
+            x1r=0, y1r=0,
+            x2r=0, y2r=0,
+            c_u=false, c_d=false,
+            c_l=false, c_r=false
 		}
 	}
+    return player
 end
 
 function player_update()
