@@ -40,6 +40,7 @@ function draw_rounded_textbox(x_tile, y_tile, text)
     local x = x_tile * 8 + 4 - width / 2
     local y = y_tile * 8 - height - 8
 
+    -- Keeping text box on screen
     x = max(x, cam.x + 2)
     y = max(y, cam.y + 2)
     while x + width > cam.x + 128 do
@@ -49,41 +50,14 @@ function draw_rounded_textbox(x_tile, y_tile, text)
         y -= 1
     end
 
-    -- Draw the rounded rectangle
+    -- Draw box
     draw_rounded_rectangle(x, y, width, height, radius, background_color)
-
-    -- Draw the text lines
+    -- Draw each line of text
     for i, line in ipairs(lines) do
         print(line, x + padding, y + padding + (i - 1) * line_height, text_color)
     end
 end
 
-function split_text(text, width_in_pixels)
-    local lines = {}
-    local current_line = ""
-    local current_width = 0
-    
-    for word in all(split(" ", text)) do
-        local word_width = print(word, -100, -100, 7)
-        
-        if current_width + word_width <= width_in_pixels then
-            current_line = current_line .. " " .. word
-            current_width = current_width + word_width
-        else
-            add(lines, current_line)
-            current_line = word
-            current_width = word_width
-        end
-    end
-    
-    add(lines, current_line)
-    
-    return lines
-end
-
-
-
---[[
 function split_text(text, max_width_pixels)
     local result = {}
     local start = 1
@@ -97,7 +71,6 @@ function split_text(text, max_width_pixels)
 
         while end_pos <= length do
             local char = sub(text, end_pos, end_pos)
-
             if char == '\n' then
                 -- Split the text at newline character
                 local line = sub(text, start, end_pos - 1)
@@ -128,7 +101,6 @@ function split_text(text, max_width_pixels)
 
     return result
 end
-]]
 
 
 function drw_flt_mtr()

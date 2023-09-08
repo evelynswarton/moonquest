@@ -23,7 +23,7 @@ acceleration = 0.15
 cam_speed = .925
 
 -- debugging constant
-debug_on = false
+debug_on = true
 
 -- flag constants
 moon_flag = 4

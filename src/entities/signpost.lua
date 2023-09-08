@@ -1,22 +1,14 @@
-sign1 = 'press ❎ to jump'
-sign2 = 'you can wall jump'
-sign3 = 'collect moons!'
-sign4 = 'hold ❎ to float'
-sign5 = 'be careful...'
-
+--num_moons_collected = 0
 max_sign_width = 100
+--moon_collection_sign = {''}
 
 function init_signs()
     add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 3, 60)
-    add_sign('the rain is getting out of control these days...', 5, 50)
-    add_sign('if this weather doesn\'t let up, we will need to abandon this place etirely', 0, 34)
-    add_sign('we should have brought our umbrellas. maybe we could have used them to float.', 12, 36)
-    add_sign(sign5, 23, 44)
-    add_sign('we tried our best to retrieve every moon here... but there are still 100 moons we couldn\'t recover', 8, 62)
-    add_sign('this place is full of traps...', 32, 40)
+    add_sign('hold ❎ to float', 12, 36)
+    add_sign('there are still 100 moons to collect!', 8, 62, true)
 end
 
-function add_sign(message, x_tile, y_tile)
+function add_sign(message, x_tile, y_tile, is_moon_counter)
     add(signs, {
         x = x_tile * 8,
         y = y_tile * 8,
@@ -27,6 +19,7 @@ function add_sign(message, x_tile, y_tile)
         text = message,
         hover_height = 0,
         text_index = 1,
+        b = is_moon_counter or false,
         draw = function(self)
             if self.is_hovered and not self.is_active then 
                 print('🅾️', self.x, self.y - self.hover_height, 13)
@@ -37,6 +30,9 @@ function add_sign(message, x_tile, y_tile)
             end
         end,
         update = function(self)
+            if self.b then
+                self.text = 'there are still ' .. tostr(100 - num_moons_collected) .. ' moons to collect!'
+            end
             self.is_hovered = touch(player, self)
             if self.is_hovered then
                 self.hover_height = lerp(self.hover_height, 8, 0.5)

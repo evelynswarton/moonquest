@@ -185,6 +185,9 @@ function debug_draw()
     print("c<⬇️>:"..(player.db.c_d and 'true' or 'false'),player.x,player.y-16)
     print("c<⬅️>:"..(player.db.c_l and 'true' or 'false'),player.x,player.y-22)
     print("c<➡️>:"..(player.db.c_r and 'true' or 'false'),player.x,player.y-28)
+    print('ram:'..stat(0), cam.x, cam.y + 128 - 6, 11)
+    print('cpuTot:'..stat(1), cam.x, cam.y + 128 - 12, 11)
+    print('cpuSys:'..stat(2), cam.x, cam.y + 128 - 18, 11)
 end
 
 
