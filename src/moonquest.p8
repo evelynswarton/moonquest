@@ -9,9 +9,11 @@ __lua__
 #include graphics/fx.lua
 #include graphics/ui.lua
 #include scenes/menu.lua
+#include scenes/game.lua
 #include utility/collision.lua
 #include utility/constants.lua
 #include utility/math.lua
+#include utility/debug.lua
 
 -- moonquest
 -- an ezpz experience

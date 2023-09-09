@@ -56,7 +56,7 @@ function player_update()
     end
     if player.on_wall != "none" then
         if player.dy > 0 then
-            player.dy = limit_speed(player.dy, max_wall_slide_speed)
+            player.dy = clamp(player.dy, max_wall_slide_speed)
         end
         --if abs(player.dy) > max_wall_slide_speed then
         --    player.dy = sgn(player.dy) * player.wljmp_frc
@@ -201,7 +201,7 @@ function player_update()
         player.landed=false
         player.jumping=false
 
-        player.dy=limit_speed(player.dy,player.max_dy)
+        player.dy=clamp(player.dy,player.max_dy)
 
         if collides_with_map(player,"down",0) then
             player.landed=true
@@ -261,10 +261,10 @@ function player_update()
         end
     end
     --move
-    player.dx = limit_speed(player.dx, player.max_dx)
-    player.dy = limit_speed(player.dy, player.max_dy)
-    player.x+=player.dx
-    player.y+=player.dy
+    player.dx = clamp(player.dx, player.max_dx)
+    player.dy = clamp(player.dy, player.max_dy)
+    player.x += player.dx
+    player.y += player.dy
     --limit to map
     if player.x < map_start then
         player.x = map_start

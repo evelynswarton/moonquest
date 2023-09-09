@@ -24,6 +24,7 @@ cam_speed = .925
 
 -- debugging constant
 debug_on = true
+debug_color = 12
 
 -- flag constants
 moon_flag = 4
