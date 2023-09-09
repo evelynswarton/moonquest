@@ -1,9 +1,8 @@
-
 function add_dust(_x,_y,_dx,_dy)
     add(graphics,{
         x=_x,
         y=_y,
-        dx=_dx+rnd(1)-1,
+        dx=(rnd(1) * -sgn(_dx)),
         dy=_dy,
         r=rnd(3),
         draw=function(self)
@@ -29,7 +28,6 @@ function add_dust(_x,_y,_dx,_dy)
         end
     })
 end
-
 
 function add_wipe(_c)
     add(graphics,{
@@ -150,8 +148,6 @@ function add_splash(x_tile, y_tile)
         draw = function(self)
             pset(self.x, self.y, 7)
             pset(self.x + self.dx, self.y + self.dy, 13)
-            --spr(89, self.x, self.y)
-            --print('x: ' .. splashes[1].x .. ', y: ' .. splashes[1].y, cam.x, cam.y)
         end,
         update = function(self)
             self.t += 1

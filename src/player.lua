@@ -69,7 +69,7 @@ function player_update()
             end
         end
     end
-    if player.sliding and abs(player.dx) > 1.5 then
+    if player.sliding and abs(player.dx) > 0.75 then
         add_dust(player.x + player.w / 2, player.y + player.h, player.dx, player.dy)
     end
     player.dx *= (1 - floor_friction)

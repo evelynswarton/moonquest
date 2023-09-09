@@ -17,7 +17,6 @@ function draw_rounded_rectangle(x, y, width, height, radius, color)
     circfill(x + width - radius - 1, y + height - radius - 1, radius, color)
 end
 
-
 function draw_rounded_textbox(x_tile, y_tile, text)
     local max_width = 100
     local radius = 2
@@ -63,16 +62,13 @@ function split_text(text, max_width_pixels)
     local start = 1
     local length = #text
     local line_width = 0
-    local char_width = 4 -- Assuming a fixed character width of 4 pixels
-
+    local char_width = 4
     while start <= length do
         local end_pos = start
         line_width = 0
-
         while end_pos <= length do
             local char = sub(text, end_pos, end_pos)
             if char == '\n' then
-                -- Split the text at newline character
                 local line = sub(text, start, end_pos - 1)
                 add(result, line)
                 start = end_pos + 1
@@ -83,7 +79,6 @@ function split_text(text, max_width_pixels)
                 if line_width <= max_width_pixels then
                     end_pos = end_pos + 1
                 else
-                    -- Split the text when the pixel width is exceeded
                     local line = sub(text, start, end_pos - 1)
                     add(result, line)
                     start = end_pos
@@ -92,18 +87,15 @@ function split_text(text, max_width_pixels)
             end
         end
         if end_pos > length then
-            -- Add the last remaining part of the text
             local line = sub(text, start, length)
             add(result, line)
             break
         end
     end
-
     return result
 end
 
-
-function drw_flt_mtr()
+function draw_float_meter()
     if player.floating then
         rectfill(player.x - 1, player.y - 9,
         player.x + player.float_meter - 2, player.y - 9,

@@ -1,5 +1,3 @@
-
-
 function game.update()
     player_update()
     player_animate()
@@ -41,13 +39,18 @@ function game.update()
 end
 
 function game.draw()
+    -- Clear the screen every frame
     cls(0)
+    --palt(12)
+    -- First render background rain
     for drop in all(rain) do
         drop:draw()
     end
+
+    -- Render map
     map(0,0)
-    --print("jump : ❎", 1 * 8, 59 * 8, 7)
-    --print("float : ❎ [while falling]", 24 * 8, 59 * 8, 7)
+
+    -- Render everything else
     for splash in all(splashes) do
         splash:draw()
     end
@@ -63,8 +66,11 @@ function game.draw()
     for spike in all(floating_spikes) do 
         spike:draw()
     end
+    -- Render player
     spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
-    drw_flt_mtr()
+
+    -- Float meter for umbrella
+    draw_float_meter()
     for i = 1, #enm do
         local myenm=enm[i]
         spr(myenm.spr, myenm.x, myenm.y)	
