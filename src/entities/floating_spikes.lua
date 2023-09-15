@@ -50,6 +50,44 @@ function add_all_spikes()
     add_floating_spike({
         {x = 33 * 8, y = 6 * 8},
         {x = 43 * 8, y = 6 * 8}}, 1)
+    add_floating_spike(four_point_path(43, 16, 48, 11), 2)
+    add_floating_spike(four_point_path(44, 15, 47, 12), 2)
+    add_floating_spike(two_point_path(33, 13, 33, 11), 2)
+    for x_location in all({21, 24, 27, 30}) do 
+        add_floating_spike(two_point_path(x_location, 15, x_location, 9), 2)
+    end
+    add_floating_spike(two_point_path(18, 16, 32, 16), 1)
+    add_floating_spike(two_point_path(17, 9, 17, 18), 3)
+    for y_loc in all({13, 14, 15}) do 
+        add_floating_spike(two_point_path(10, y_loc, 15, y_loc), rnd(3) + 1)
+    end
+    for x_loc in all({20, 24, 28}) do 
+        add_floating_spike(two_point_path(x_loc, 18, x_loc, 16), rnd(2) + 1)
+    end
+    --add_floating_spike(two_point_path())
+    --add_floating_spike(two_point_path(30, 15, 30, 9), )
+end
+
+function two_point_path(x1, y1, x2, y2)
+    return {{x = x1 * 8, y = y1 * 8}, {x = x2 * 8, y = y2 * 8}}
+end
+
+function four_point_path(x1, y1, x2, y2)
+    return {
+        {x = x1 * 8, y = y1 * 8},
+        {x = x1 * 8, y = y2 * 8},
+        {x = x2 * 8, y = y2 * 8},
+        {x = x2 * 8, y = y1 * 8}
+    }
+end
+
+function n_point_path(n, x_array, y_array)
+    path = {}
+    for i = 1, n do 
+        path[i].x = x_array[i] * 8
+        path[i].y = y_array[i] * 8
+    end
+    return path
 end
 
 function add_floating_spike(path, speed, sprite_sheet, num_frames, frame_duration)
