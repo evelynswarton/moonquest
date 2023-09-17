@@ -27,5 +27,6 @@ debug_on = true
 debug_color = 12
 
 -- flag constants
-moon_flag = 4
 save_flag = 3
+moon_flag = 4
+block_flag = 5

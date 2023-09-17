@@ -104,3 +104,23 @@ function draw_float_meter()
         player.x+8,player.y-8, 2)
     end
 end
+
+-- ⬅️➡️⬆️⬇️❎🅾️
+hover_key = {
+    draw = function(obj)
+        print('🅾️', obj.x, obj.y - obj.hover_height, 13)
+    end,
+    update = function(obj)
+        obj.is_hovered = touch(player, obj) and not obj.is_held
+        if obj.is_hovered then
+            obj.hover_height = lerp(obj.hover_height, 8, 0.5)
+            if btnp(4) then
+                obj.is_held = true
+                obj.is_hovered = false
+            end
+        else
+            obj.hover_height = 0
+        end
+    end
+}
+

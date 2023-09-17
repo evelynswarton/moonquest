@@ -5,35 +5,61 @@ grab_y_offset = 3
 
 block_gravity = 0.1
 block_launch_force = 2
--- TODO: seperate physics and collider logic from player so we can use here
+
 function add_interactive_block(type, x, y)
-    add(inteactive_blocks, {
+    add(interactive_blocks, {
         type = type,
         x = x,
         y = y,
         dx = 0,
         dy = 0,
+        w = 8,
+        h = 8,
+        max_dx = 10,
+        max_dy = 10,
         is_held = false,
+        is_hovered = false,
+        hb = {
+            x1 = 0,
+            x2 = 7,
+            y1 = 0,
+            y2 = 7
+        },
+        hover_height = 0,
         update = function(self)
-            if self.is_held then 
-                if player.flip then
+            if self.is_held then
+
+                -- set location to player location
+                self.is_hovered = false
+                if player.flp then
                     self.x = player.x - grab_x_offset
                 else
                     self.x = player.x + grab_x_offset
                 end
-                if not btnp('🅾️') then
+                self.y = player.y
+
+                -- throw block
+                if btnp(4) then
                     local sign = 1
-                    if player.flip then
+                    if player.flp then
                         sign = -1
                     end
                     self.dx = sign * 2
+                    self.dy = -1
+                    self.is_held = false
+                end
             else
-                self.dy += block_gravity
-                self.dx *= 0.5
+                -- move do physics when not held
+                collision(self)
+                move(self)
+                hover_key.update(self)
             end
         end,
         draw = function(self)
             spr(16, self.x, self.y)
+            if self.is_hovered then
+                hover_key.draw(self)
+            end
         end
-    }
+    })
 end

@@ -27,6 +27,9 @@ function game.update()
     for s in all(signs) do 
         s:update()
     end
+    for block in all(interactive_blocks) do
+        block:update()
+    end
     if debug_on then
         debug_update()
     end
@@ -65,6 +68,9 @@ function game.draw()
     end
     for spike in all(floating_spikes) do 
         spike:draw()
+    end
+    for block in all(interactive_blocks) do
+        block:draw()
     end
     -- Render player
     spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
@@ -126,10 +132,13 @@ function game.init()
     flags = {}
     for tile_x = 0, 127 do
         for tile_y = 0, 127 do 
+            local x, y = tile_x * 8, tile_y * 8
             if fget(mget(tile_x, tile_y), moon_flag) then
-                add_moon(tile_x * 8, tile_y * 8)
+                add_moon(x, y)
             elseif fget(mget(tile_x, tile_y), save_flag) then
                 add_flag(tile_x, tile_y)
+            elseif fget(mget(tile_x, tile_y), block_flag) then
+                add_interactive_block('blank', x, y)
             end
         end
     end
