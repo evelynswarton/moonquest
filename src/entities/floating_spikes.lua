@@ -53,19 +53,25 @@ function add_all_spikes()
     add_floating_spike(four_point_path(43, 16, 48, 11), 2)
     add_floating_spike(four_point_path(44, 15, 47, 12), 2)
     add_floating_spike(two_point_path(33, 13, 33, 11), 2)
-    for x_location in all({21, 24, 27, 30}) do 
-        add_floating_spike(two_point_path(x_location, 15, x_location, 9), 2)
+    for i,x_location in pairs({21, 24, 27, 30}) do
+        if i%2==0 then
+            add_floating_spike(two_point_path(x_location, 15, x_location, 9), 0.5)
+        else
+            add_floating_spike(two_point_path(x_location, 9, x_location, 15), 0.5)
+        end
     end
     add_floating_spike(two_point_path(18, 16, 32, 16), 1)
     add_floating_spike(two_point_path(17, 9, 17, 18), 3)
     for y_loc in all({13, 14, 15}) do 
-        add_floating_spike(two_point_path(10, y_loc, 15, y_loc), rnd(3) + 1)
+        add_floating_spike(two_point_path(10, y_loc, 15, y_loc), 0.2)
     end
     for x_loc in all({20, 24, 28}) do 
         add_floating_spike(two_point_path(x_loc, 18, x_loc, 16), rnd(2) + 1)
     end
+    add_floating_spike(two_point_path(59,1,59,19),1)
     --add_floating_spike(two_point_path())
     --add_floating_spike(two_point_path(30, 15, 30, 9), )
+    --save_floating_spike_data()
 end
 
 function two_point_path(x1, y1, x2, y2)

@@ -1,3 +1,8 @@
+function collides_with_block(obj, dir)
+    for block in all(interactive_blocks) do
+    end
+end
+
 function collides_with_map(obj, dir, flag)
     -- token saving? idek
     local x = obj.x
@@ -72,3 +77,4 @@ function touch(a, b)
         return true
     end
 end
+

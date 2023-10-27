@@ -28,7 +28,6 @@ function add_interactive_block(type, x, y)
         hover_height = 0,
         update = function(self)
             if self.is_held then
-
                 -- set location to player location
                 self.is_hovered = false
                 if player.flp then
@@ -49,6 +48,11 @@ function add_interactive_block(type, x, y)
                     self.is_held = false
                 end
             else
+                for fan in all(fans) do 
+                    if touch(self, fan.field) then 
+                        self.dy -= fan.force
+                    end
+                end
                 -- move do physics when not held
                 collision(self)
                 move(self)

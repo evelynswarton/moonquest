@@ -2,7 +2,7 @@ function add_dust(_x,_y,_dx,_dy)
     add(graphics,{
         x=_x,
         y=_y,
-        dx=(rnd(1) * -sgn(_dx)),
+        dx=_dx or (rnd(1) * -sgn(_dx)),
         dy=_dy,
         r=rnd(3),
         draw=function(self)

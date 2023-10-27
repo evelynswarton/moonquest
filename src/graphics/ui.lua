@@ -96,7 +96,7 @@ function split_text(text, max_width_pixels)
 end
 
 function draw_float_meter()
-    if player.floating then
+    if state_is('floating') then
         rectfill(player.x - 1, player.y - 9,
         player.x + player.float_meter - 2, player.y - 9,
         8)
@@ -123,4 +123,3 @@ hover_key = {
         end
     end
 }
-

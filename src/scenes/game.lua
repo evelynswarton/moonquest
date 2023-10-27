@@ -2,6 +2,9 @@ function game.update()
     player_update()
     player_animate()
     add_splashes_at_random(10)
+    for c in all(bg_graphics) do 
+        c:update() 
+    end
     for splash in all(splashes) do
         splash:update()
     end
@@ -14,6 +17,9 @@ function game.update()
     end
     for f in all(flags) do
         f:update()
+    end
+    for fan in all(fans) do 
+        fan:update()
     end
     for r in all(rain) do
         r:update()
@@ -44,7 +50,14 @@ end
 function game.draw()
     -- Clear the screen every frame
     cls(0)
-    --palt(12)
+    pal(0, 129, 1)
+    pal(10, 1, 1)
+    pal(9, 130, 1)
+    pal(1, 131, 1)
+    pal(11, 139, 1)
+    for c in all(bg_graphics) do 
+        c:draw() 
+    end
     -- First render background rain
     for drop in all(rain) do
         drop:draw()
@@ -69,17 +82,26 @@ function game.draw()
     for spike in all(floating_spikes) do 
         spike:draw()
     end
+    for fan in all(fans) do 
+        fan:draw()
+    end
     for block in all(interactive_blocks) do
         block:draw()
     end
     -- Render player
     spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
+    if debug_on then 
+        player_debug_draw()
+    end
 
     -- Float meter for umbrella
     draw_float_meter()
     for i = 1, #enm do
         local myenm=enm[i]
         spr(myenm.spr, myenm.x, myenm.y)	
+    end
+    for s in all(signs) do 
+        s:draw()
     end
     draw_moon_counter(num_moons_collected)
     draw_death_counter(num_deaths)
@@ -88,9 +110,6 @@ function game.draw()
     end
     if debug_on then
         debug_draw()
-    end
-    for s in all(signs) do 
-        s:draw()
     end
 end
 
@@ -126,6 +145,10 @@ end
 
 function game.init()
     music(0)
+    bg_graphics = {}
+    for i = 0, 10 do 
+        add_circ()
+    end
     graphics = {}
     num_moons_collected = 0
     moons = {}
@@ -144,6 +167,8 @@ function game.init()
     end
     floating_spikes = {}
     add_all_spikes()
+    fans = {}
+    add_all_fans()
     signs = {}
     splashes = {}
     init_signs()

@@ -14,6 +14,7 @@ function add_sign(message, x_tile, y_tile, is_moon_counter)
         y = y_tile * 8,
         w = 8,
         h = 8,
+        sprite = 103,
         is_hovered = false,
         is_active = false,
         text = message,
@@ -23,6 +24,19 @@ function add_sign(message, x_tile, y_tile, is_moon_counter)
         draw = function(self)
             if self.is_hovered and not self.is_active then 
                 print('🅾️', self.x, self.y - self.hover_height, 13)
+                --[[
+                for i = 0, 15 do 
+                    pal(i, 7)
+                end
+                spr(self.sprite, self.x + 1, self.y + 1)
+                spr(self.sprite, self.x - 1, self.y + 1)
+                spr(self.sprite, self.x + 1, self.y - 1)
+                spr(self.sprite, self.x - 1, self.y - 1)
+                for i = 0, 15 do 
+                    pal(i, i)
+                end
+                spr(self.sprite, self.x, self.y)
+                ]]--
             end
             if self.is_active then
                 local substring = sub(self.text, 0, flr(self.text_index))
