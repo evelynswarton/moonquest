@@ -158,10 +158,13 @@ function game.init()
             local x, y = tile_x * 8, tile_y * 8
             if fget(mget(tile_x, tile_y), moon_flag) then
                 add_moon(x, y)
+                if not debug_on then mset(tile_x, tile_y, 0) end
             elseif fget(mget(tile_x, tile_y), save_flag) then
                 add_flag(tile_x, tile_y)
+                if not debug_on then mset(tile_x, tile_y, 0) end
             elseif fget(mget(tile_x, tile_y), block_flag) then
                 add_interactive_block('blank', x, y)
+                if not debug_on then mset(tile_x, tile_y, 0) end
             end
         end
     end

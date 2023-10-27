@@ -66,9 +66,9 @@ function player_physics_update()
          -- wall slide dust
          if player.dy > 0.5 then
              if state_is('onleft') then
-                 add_dust(player.x, player.y, player.dx, player.dy)
+                 add_dust(player.x, player.y, rnd(1), player.dy)--, player.dx, player.dy)
              else
-                 add_dust(player.x + player.w, player.y, player.dx, player.dy)
+                 add_dust(player.x + player.w, player.y, -rnd(1), player.dy)--, player.dx, player.dy)
              end
          end
      end
