@@ -29,11 +29,8 @@ function add_dust(_x,_y,_dx,_dy)
     })
 end
 
-function add_wipe(_c)
+function add_wipe(color, speed)
     add(graphics,{
-        colr=_c,
-        a=0,
-        b=0,
         draw=function(self)
             local a = self.a
             local b = self.b

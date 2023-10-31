@@ -4,7 +4,7 @@ function add_circ()
         y = rnd(128),
         dx = (rnd(2) + 1) / 3,
         dy = (-rnd()) / 10,
-        r = rnd(64),
+        r = rnd(54),
         draw = function(self)
             fillp(-23131)
             circfill(cam.x + self.x, cam.y + self.y, self.r, 10)

@@ -1,5 +1,14 @@
 debug_info = {}
 
+function error(message) 
+    local x, y = 2, 120
+    if cam.x != nil and cam.y != nil then
+        x += cam.x
+        y += cam.y
+    end
+    print(message, x, y, debug_color)
+end
+
 function log(s)
     add(debug_info, s)
 end
