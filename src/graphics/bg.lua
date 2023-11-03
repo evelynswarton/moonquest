@@ -9,6 +9,7 @@ function add_circ()
             fillp(-23131)
             circfill(cam.x + self.x, cam.y + self.y, self.r, 10)
             fillp()
+            --circfill(cam.x + self.x, cam.y + self.y, self.r * 0.8, 10)
         end,
         update = function(self)
             self.x += self.dx 

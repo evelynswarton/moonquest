@@ -31,13 +31,17 @@ end
 
 function add_wipe(color, speed)
     add(graphics,{
+        a = 0,
+        b = 0,
         draw=function(self)
             local a = self.a
             local b = self.b
             local x = cam.x + 63
             local y = cam.y + 63
             for i = a, b do
-                rect(x - i, y - i, x + i, y + i, self.colr)
+                --fillp(-32736)
+                rect(x - i, y - i, x + i, y + i, 8)
+                --fillp()
             end
         end,
         update=function(self)

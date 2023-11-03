@@ -36,6 +36,9 @@ function game.update()
     for block in all(interactive_blocks) do
         block:update()
     end
+    for button in all(buttons) do 
+        button:update()
+    end
     if debug_on then
         debug_update()
     end
@@ -84,6 +87,9 @@ function game.draw()
     end
     for fan in all(fans) do 
         fan:draw()
+    end
+    for button in all(buttons) do 
+        button:draw()
     end
     for block in all(interactive_blocks) do
         block:draw()
@@ -168,6 +174,8 @@ function game.init()
             end
         end
     end
+    buttons = {}
+    add_all_buttons()
     floating_spikes = {}
     add_all_spikes()
     fans = {}
