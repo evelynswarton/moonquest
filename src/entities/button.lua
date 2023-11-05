@@ -1,10 +1,18 @@
+-- usage:
+-- button_signal[button.id] in {true, false}
+-- depending on if button with given id is
+-- pressed
+button_signal = {}
+
 function add_all_buttons() 
-    add_button(18, 62)
+    -- id's just increment for every button we add
+    -- 1, 2, 3, ...
+    add_button(18, 62) -- 1
 end
 
 function add_button(x_tile, y_tile)
     add(buttons, {
-        id = #buttons,
+        id = #buttons + 1,
         x = x_tile * 8,
         y = y_tile * 8,
         w = 8,
@@ -24,10 +32,11 @@ function add_button(x_tile, y_tile)
             local active = false
             for block in all(interactive_blocks) do 
                 if touch(self, block) then
-                    active = true 
+                    active = true
                 end
             end
             self.active = active
+            button_signal[self.id] = self.active
         end
     })
 end
