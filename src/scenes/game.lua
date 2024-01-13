@@ -150,7 +150,7 @@ function game.reset()
 end
 
 function game.init()
-    music(0)
+    music(30)
     bg_graphics = {}
     for i = 0, 10 do 
         add_circ()

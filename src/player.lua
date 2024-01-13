@@ -110,7 +110,7 @@ function player_controller_update()
     end
     if btnp(❎) and on_ground() then
         player.dy -= player.boost
-        sfx(62)
+        sfx(62, 3, 4, 4)
         set_state('jumping')
     --let go of ❎ for short hop
     elseif not btn(❎) and state_is('jumping') then
@@ -118,7 +118,7 @@ function player_controller_update()
         set_state('falling')
     --wall jump left
     elseif btnp(❎) and state_is('onleft') then
-        sfx(62)
+        sfx(62, 3, 4, 4)
         if player.prev_wall == "l" then
             player.dy = -1 * player.wlclm_dy
         else
@@ -130,7 +130,7 @@ function player_controller_update()
         --player.jumping=true
     --wall jump right
     elseif btnp(❎) and state_is('onright') then
-        sfx(62)
+        sfx(62, 3, 4, 4)
         if player.prev_wall == "r" then
             player.dy = -1 * player.wlclm_dy
         else
@@ -173,7 +173,7 @@ function player_collider_update()
     --check hitbox for good things
     for m in all(moons) do
         if touch(player,m) then
-            sfx(60)
+            sfx(62, 3, 0, 4)
             num_moons_collected += 1
             add_swoosh(m.x + 0.5 * m.w, m.y + 0.5 * m.h)
             del(moons, m)
@@ -342,7 +342,7 @@ function player_debug_draw()
 end
 
 function player_die()
-    sfx(63)
+    sfx(62, 3, 12, 4)
     add_wipe(8)
     num_deaths += 1
     game.reset()

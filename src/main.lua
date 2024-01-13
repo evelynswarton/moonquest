@@ -109,7 +109,7 @@ function add_flag(_x,_y)
             and player.y>self.y
             and player.y<=self.y+8 then
                 if not self.up then 
-                    sfx(61)
+                    sfx(62, 3, 8, 2)
                 end
                 self.up=true
                 for f in all(flags) do 
@@ -123,7 +123,7 @@ function add_flag(_x,_y)
             and player.y+8>self.y
             and player.y<= self.y+8 then
                 if not self.up then 
-                    sfx(61)
+                    sfx(62, 3, 8, 2)
                 end
                 self.up=true
                 for f in all(flags) do 
