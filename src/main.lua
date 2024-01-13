@@ -118,7 +118,7 @@ function add_flag(_x,_y)
                     end
                 end
             end
-            if player.x+8>self.x
+            if player.x + 8 > self.x
             and player.x+8<=self.x+8
             and player.y+8>self.y
             and player.y<= self.y+8 then
