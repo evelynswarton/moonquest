@@ -29,7 +29,6 @@ function add_button(x_tile, y_tile, x_target, y_target)
             else
                 spr(self.up_spr, x, y)
             end
-            pset(cam.x + 1, cam.y + 1, 11)
         end,
         update = function(self)
             local active = false

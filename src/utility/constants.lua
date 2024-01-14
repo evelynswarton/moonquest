@@ -5,8 +5,8 @@ default_spawn_y = 512 - 32
 pause_controls_duration = 0.75
 
 -- physics constants
-gravity = 0.19
-floor_friction = 0.09
+gravity = 0.18 or 0.19
+floor_friction = 0.11
 max_wall_slide_speed = 0.8
 
 -- map limit constants

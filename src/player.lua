@@ -239,6 +239,8 @@ function player_collider_update()
             while flr(player.x) % 8 != 0 do
                 player.x += 1
             end
+        elseif adjacent_to_tile(player, 1) == 'l' then
+            set_state('onleft')
         else
             player.on_wall = "none"
         end
@@ -251,14 +253,23 @@ function player_collider_update()
             while flr(player.x) % 8 != 0 do
                 player.x -= 1
             end
+        elseif adjacent_to_tile(player, 1) == 'r' then
+            set_state('onright')
         else
             player.on_wall = "none"
         end
     else
-        player.db.c_u=false
-        player.db.c_d=false
-        player.db.c_l=false
-        player.db.c_r=false
+        local dir = adjacent_to_tile(player, 1)
+        if dir == 'l' then
+            set_state('onleft')
+        elseif dir == 'r' then
+            set_state('onright')
+        else
+            player.db.c_u=false
+            player.db.c_d=false
+            player.db.c_l=false
+            player.db.c_r=false
+        end
     end
 end
 

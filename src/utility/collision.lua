@@ -78,3 +78,18 @@ function touch(a, b)
     end
 end
 
+function adjacent_to_tile(obj, flag)
+    local x1 = (obj.x - 1) / 8
+    local x2 = (obj.x + obj.w + 5) / 8
+    local y1 = (obj.y + 2) / 8
+    local y2 = (obj.y + obj.h - 2) / 8
+    if fget(mget(x1, y1), flag)
+    or fget(mget(x1, y2), flag) then 
+        return 'l'
+    elseif fget(mget(x2, y1), flag)
+    or fget(mget(x2, y2), flag) then
+        return 'r'
+    else
+        return 'none'
+    end
+end
