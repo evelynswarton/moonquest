@@ -26,10 +26,12 @@ function debug_draw()
     end
     -- Hitbox display
     rect(
-        player.db.x1r,
-        player.db.y1r,
-        player.db.x2r,
-        player.db.y2r,
-        debug_color
+        player.db.x1,
+        player.db.y1,
+        player.db.x2,
+        player.db.y2,
+        11
     )
+    print('dx = '..tostr(player.dx), cam.x, cam.y + 4 * 6, debug_color)
+    print('dy = '..tostr(player.dy), cam.x, cam.y + 5 * 6, debug_color)
 end

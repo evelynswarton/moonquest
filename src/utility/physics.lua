@@ -1,5 +1,4 @@
 function collision(obj)
-
     if obj.dy > 0 then
         obj.dy = clamp(obj.dy, obj.max_dy)
         if collides_with_map(obj, 'down', 0) and not collides_with_map(obj, 'right', 6) then

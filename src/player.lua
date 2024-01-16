@@ -23,6 +23,20 @@ player = {
         y1 = 0,
         y2 = 7
     },
+    hurtbox = {
+        x = 1,
+        y = 1,
+        w = 6,
+        h = 4,
+        dx = 0,
+        dy = 0,
+        hb = {
+            x1 = 0,
+            x2 = 6,
+            y1 = 0,
+            y2 = 4
+        }
+    },
     running = false,
     jumping = false,
     sliding = false,
@@ -33,14 +47,12 @@ player = {
     state = "idle",
     --debug
     db = {
-        x1r=0, y1r=0,
-        x2r=0, y2r=0,
-        c_u=false, c_d=false,
-        c_l=false, c_r=false
+        x1=0, y1=0,
+        x2=0, y2=0
     }
 }
 
-function player_init(_x,_y)
+function player_init(_x, _y)
     player.x = _x
     player.y = _y
     player.dx = 0
@@ -96,15 +108,13 @@ function player_controller_update()
         if on_ground() then set_state('running') end
         player.flp = false
     end
-
-    --slide
+    -- slide
     if state_is('running')
         and not btn(⬅️)
         and not btn(➡️) then
         set_state('sliding')
     end
-
-    --jump
+    -- jump
     if state_is('jumping') and player.dy >= 0 then 
         set_state('falling')
     end
@@ -139,27 +149,23 @@ function player_controller_update()
         player.prev_wall = "r"
         player.dx -= player.wljmp_dx
         set_state('jumping')
-        --player.jumping=true
-
     --float
     elseif btn(❎) and (state_is('falling') or state_is('floating')) and player.float_meter > 0 then
         if player.dy > player.umb_dy then
             player.dy = player.umb_dy
         end
         set_state('floating')
-        --player.floating = true
         player.float_meter -= float_depletion_rate
-        --set_state('falling')
-        --player.floating=false
     end
 end
 
 function player_collider_update()
     --check hitbox for bad things
-    if player.dx < 0 and collides_with_map(player, "left", 2)
-    or player.dx > 0 and collides_with_map(player, "right", 2)
-    or player.dy > 0 and collides_with_map(player, "up", 2)
-    or player.dy < 0 and collides_with_map(player, "down", 2)
+    local hb = player.hurtbox
+    if player.dx < 0 and collides_with_map(hb, 'left', 2)
+    or player.dx > 0 and collides_with_map(hb, 'right', 2)
+    or player.dy > 0 and collides_with_map(hb, 'up', 2)
+    or player.dy < 0 and collides_with_map(hb, 'down', 2)
     --check if fallen off map
     or player.y > 512 then
         player_die()
@@ -180,14 +186,8 @@ function player_collider_update()
         end
     end
 
-    if not collides_with_map(player,"left",1)
-        and not collides_with_map(player,"right",1) then
-        player.on_wall="none"
-    end
-
-    --check collision on y
+    -- if falling, check ground collision
     if player.dy > 0 then
-        -- m
         if btn(5) then set_state('floating') else set_state('falling') end
         player.dy = clamp(player.dy, player.max_dy)
         -- touch ground
@@ -204,7 +204,9 @@ function player_collider_update()
             player.dy = 0
             -- snaps player to y grid
             player.y -= ((player.y+player.h+1)%8)-1
-            player.db.c_d=true
+            player.db.c_d = true
+        else
+            player.db.c_d = false
         end
     elseif player.dy < 0 then
         -- if moving up must be jumping or floating 
@@ -214,7 +216,10 @@ function player_collider_update()
         if collides_with_map(player,"up",1) then
             player.dy = 0
             player.db.c_u=true
+        else
+            player.db.c_u = false
         end
+
     end
     -- fan physics
     for fan in all(fans) do 
@@ -231,10 +236,12 @@ function player_collider_update()
     --check collision on x
     --moving left
     if player.dx < 0 then
-        if collides_with_map(player, "left", 1) then
+        if collides_with_map(player, 'left', 1) then
+            --while get_collision_distance(player.x, player.y, player.w, player.h, player.dx, player.dy, 'left', 1) != 0 do 
+                --player.dx += 1
+            --end
             player.dx = 0
             set_state('onleft')
-            --player.on_wall = "l"
             player.db.c_l = true
             while flr(player.x) % 8 != 0 do
                 player.x += 1
@@ -243,6 +250,7 @@ function player_collider_update()
             set_state('onleft')
         else
             player.on_wall = "none"
+            player.db.c_l = false
         end
     elseif player.dx > 0 then
         if collides_with_map(player, "right", 1) then
@@ -257,6 +265,7 @@ function player_collider_update()
             set_state('onright')
         else
             player.on_wall = "none"
+            player.db.c_r = false
         end
     else
         local dir = adjacent_to_tile(player, 1)
@@ -271,6 +280,10 @@ function player_collider_update()
             player.db.c_r=false
         end
     end
+    player.hurtbox.dx = player.dx
+    player.hurtbox.dy = player.dy
+    player.hurtbox.x = player.x + 1
+    player.hurtbox.y = player.y + 1
 end
 
 function player_update()
@@ -284,11 +297,11 @@ function player_update()
     end
     player_collider_update()
     --stop sliding
-    if player.sliding then
-        if abs(player.dx)<.2
-            or player.running then
-            player.dx=0
-            player.sliding=false
+    if state_is('sliding') then
+        if abs(player.dx) < 0.2
+            or state_is('running') then
+            player.dx = 0
+            set_state('sliding')
         end
     end
     --move
@@ -334,7 +347,7 @@ function player_animate()
 end
 
 function on_ground()
-    if collides_with_map(player, "down", 0) or state_is('landed') or state_is('running') or state_is('idle') or state_is('sliding') then 
+    if collides_with_map(player, 'down', 0) or state_is('landed') or state_is('running') or state_is('idle') or state_is('sliding') then 
         return true 
     end
     return false
@@ -350,6 +363,10 @@ end
 
 function player_debug_draw()
     print(player.state, player.x, player.y + player.h + 2, debug_color)
+    rect(player.x + 1, player.y + 1, player.x + 6, player.y + 4, 8)
+    
+    print('left = '..tostr(player.db.c_l), cam.x + 1, cam.y + 37, debug_color)
+    print('right = '..tostr(player.db.c_r), cam.x + 1, cam.y + 43, debug_color)
 end
 
 function player_die()

@@ -56,9 +56,9 @@ function add_all_spikes()
     --add_floating_spike(two_point_path(33, 13, 33, 11), 2)
     for i,x_location in pairs({21, 24, 27, 30}) do
         if i%2==0 then
-            add_floating_spike(two_point_path(x_location, 15, x_location, 9), 0.5)
+            add_floating_spike(two_point_path(x_location, 15, x_location, 9), 0.9)
         else
-            add_floating_spike(two_point_path(x_location, 9, x_location, 15), 0.5)
+            add_floating_spike(two_point_path(x_location, 9, x_location, 15), 0.9)
         end
     end
     add_floating_spike(two_point_path(18, 16, 32, 16), 1)
