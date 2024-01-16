@@ -7,7 +7,7 @@ button_signal = {}
 function add_all_buttons() 
     -- id's just increment for every button we add
     -- 1, 2, 3, ...
-    add_button(18, 62, 13, 59) -- 1
+    --add_button(18, 62, 13, 59) -- 1
 end
 
 function add_button(x_tile, y_tile, x_target, y_target)

@@ -1,29 +1,7 @@
 -- path = {pos1, pos2, ..., posn}
 -- pos = {x = ?, y = ?}
 function add_all_spikes()
-    add_floating_spike({
-        {x = 26 * 8, y = 42 * 8},
-        {x = 26 * 8, y = 40 * 8},
-        {x = 28 * 8, y = 40 * 8},
-        {x = 28 * 8, y = 42 * 8}}, 5)
-    add_floating_spike({
-        {x = 12 * 8, y = 27 * 8},
-        {x = 24 * 8, y = 27 * 8}}, 1.5) 
-    add_floating_spike({
-        {x = 31 * 8, y = 26 * 8},
-        {x = 31 * 8, y = 35 * 8}}, 1.5) 
-    add_floating_spike({
-        {x = 5 * 8, y = 19 * 8},
-        {x = 5 * 8, y = 28 * 8}}, 1.5) 
-    add_floating_spike({
-        {x = 2 * 8, y = 19 * 8},
-        {x = 2 * 8, y = 28 * 8}}, 1.5) 
-    add_floating_spike({
-        {x = 5 * 8, y = 1 * 8},
-        {x = 5 * 8, y = 15 * 8}}, 2) 
-    --[[add_floating_spike({
-        {x = 1 * 8, y = 5 * 8},
-        {x = 9 * 8, y = 5 * 8}}, 4) ]]
+    --[[
     add_floating_spike({
         {x = 16 * 8, y = 2 * 8},
         {x = 23 * 8, y = 2 * 8},
@@ -53,7 +31,6 @@ function add_all_spikes()
     --add_floating_spike(four_point_path(43, 16, 48, 11), 2)
     --add_floating_spike(four_point_path(44, 15, 47, 12), 2)
     add_floating_spike(two_point_path(43, 11, 48, 11), 1.7)
-    --add_floating_spike(two_point_path(33, 13, 33, 11), 2)
     for i,x_location in pairs({21, 24, 27, 30}) do
         if i%2==0 then
             add_floating_spike(two_point_path(x_location, 15, x_location, 9), 0.9)
@@ -66,16 +43,11 @@ function add_all_spikes()
     for y_loc in all({13, 14, 15}) do 
         add_floating_spike(two_point_path(10, y_loc, 15, y_loc), 0.2)
     end
-    --[[for x_loc in all({20, 24, 28}) do 
-        add_floating_spike(two_point_path(x_loc, 18, x_loc, 16), rnd(2) + 1)
-    end]]--
     add_floating_spike(two_point_path(38, 20, 57, 20), 0.6)
     add_floating_spike(two_point_path(59, 1, 59, 20), 0.8)
-    --add_floating_spike(two_point_path())
-    --add_floating_spike(two_point_path(30, 15, 30, 9), )
-    --save_floating_spike_data()
     add_floating_spike(two_point_path(83, 12, 86, 12), 1)
     add_floating_spike(four_point_path(68, 8, 76, 15), 1)
+    ]]
 end
 
 function two_point_path(x1, y1, x2, y2)

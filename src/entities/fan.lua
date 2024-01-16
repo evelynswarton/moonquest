@@ -1,5 +1,6 @@
 function add_all_fans()
     --add_fan(0, 58, 0, 0.3)
+    --[[
     add_fan(78, 17, 0, 0.3)
     add_fan(78, 13, 0, 0.3)
     add_fan(78, 9, 0, 0.3)
@@ -11,6 +12,7 @@ function add_all_fans()
     add_fan(61, 30, 0, 0.3)
     add_fan(68, 30, 0, 0.3)
     add_fan(72, 30, 0, 0.3)
+]]
 end
 
 function add_fan(x, y, r, f)
