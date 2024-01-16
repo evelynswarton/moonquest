@@ -8,13 +8,13 @@ block_launch_force = 2
 
 function add_interactive_block(type, x, y)
     add(interactive_blocks, {
-        type = type,
+        type = 'block',
         x = x,
         y = y,
         dx = 0,
         dy = 0,
-        w = 8,
-        h = 8,
+        w = 7,
+        h = 7,
         max_dx = 10,
         max_dy = 10,
         is_held = false,
@@ -35,7 +35,7 @@ function add_interactive_block(type, x, y)
                 else
                     self.x = player.x + grab_x_offset
                 end
-                self.y = player.y
+                self.y = player.y - 2
 
                 -- throw block
                 if btnp(4) then
@@ -54,7 +54,7 @@ function add_interactive_block(type, x, y)
                     end
                 end
                 -- move do physics when not held
-                collision(self)
+                --collision(self)
                 move(self)
                 hover_key.update(self)
             end

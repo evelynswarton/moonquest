@@ -1,40 +1,55 @@
 function collision(obj)
+    local collisions = 0
     if obj.dy > 0 then
-        obj.dy = clamp(obj.dy, obj.max_dy)
-        if collides_with_map(obj, 'down', 0) and not collides_with_map(obj, 'right', 6) then
-            obj.dy = 0
-            obj.y -= ((obj.y + obj.h + 1) % 8) - 1
+        collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
+        while (collisions & 1) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do     
+            obj.dy -= 1
+            if obj.dy < 0 then 
+                obj.dy = 0
+                break
+            end
+            collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
         end
     elseif obj.dy < 0 then
-        if collides_with_map(obj, 'up', 1) and not collides_with_map(obj, 'up', 6) then
-            obj.dy = 0
+        collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
+        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+            obj.dy += 1
+            if obj.dy > 0 then 
+                obj.dy = 0
+                break
+            end
+            collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
         end
     end
-
     if obj.dx < 0 then
-        if collides_with_map(obj, 'left', 1) and not collides_with_map(obj, 'left', 6) then
-            obj.dx = 0
-            while flr(obj.x) % 8 != 0 do
-                obj.x += 1
+        collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
+        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+            obj.dx += 1
+            if obj.dx > 0 then 
+                obj.dx = 0 
+                break
             end
+            collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
         end
     elseif obj.dx > 0 then
-        if collides_with_map(obj, 'right', 1) and not collides_with_map(obj, 'right', 6) then
-            obj.dx = 0
-            while flr(obj.x) % 8 != 0 do
-                obj.x -= 1
+        collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
+        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+            obj.dx -= 1
+            if obj.dx < 0 then 
+                obj.dx = 0 
+                break
             end
+            collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
         end
     end
 end
 
-function move(obj)
+function move(obj, flags)
     if obj.dy == 0 then
         obj.dx *= (1 - floor_friction)
     end
     obj.dy += gravity
-    obj.dx = clamp(obj.dx, obj.max_dx)
-    obj.dy = clamp(obj.dy, obj.max_dy)
+    collision(obj, flags)
     obj.x += obj.dx
     obj.y += obj.dy
     if obj.x < map_start then
@@ -42,5 +57,4 @@ function move(obj)
     elseif obj.x > map_end - obj.w then
         obj.x = map_end - obj.w
     end
-    
 end

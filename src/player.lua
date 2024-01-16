@@ -1,9 +1,10 @@
 player = {
+    type = 'player',
     current_sprite = 1,
     x = 0,
     y = 0,
-    w = 8,
-    h = 8,
+    w = 7,
+    h = 7,
     flp = false,
     dx = 0,
     dy = 0,
@@ -24,17 +25,17 @@ player = {
         y2 = 7
     },
     hurtbox = {
-        x = 1,
-        y = 1,
-        w = 6,
-        h = 4,
+        x = 2,
+        y = 2,
+        w = 2,
+        h = 2,
         dx = 0,
         dy = 0,
         hb = {
             x1 = 0,
-            x2 = 6,
+            x2 = 2,
             y1 = 0,
-            y2 = 4
+            y2 = 2
         }
     },
     running = false,
@@ -91,6 +92,7 @@ function player_physics_update()
         end 
         if abs(player.dx) < 0.1 then 
             set_state('idle')
+            player.dx = 0
         end
      end
      player.dx *= (1 - floor_friction) 
@@ -172,13 +174,13 @@ function player_collider_update()
     end
     -- check if touched a floating spike
     for spike in all(floating_spikes) do 
-        if touch(player, spike) then
+        if touch(player.hurtbox, spike) then
             player_die()
         end
     end
     --check hitbox for good things
     for m in all(moons) do
-        if touch(player,m) then
+        if touch(player, m) then
             sfx(62, 3, 0, 4)
             num_moons_collected += 1
             add_swoosh(m.x + 0.5 * m.w, m.y + 0.5 * m.h)
@@ -191,35 +193,44 @@ function player_collider_update()
         if btn(5) then set_state('floating') else set_state('falling') end
         player.dy = clamp(player.dy, player.max_dy)
         -- touch ground
-        if collides_with_map(player, "down", 0) then
+        while (collides_with_map2(
+        player.x,
+        player.y + player.dy,
+        player.w,
+        player.h,
+        'down') & 1) != 0 do
             -- fix state
             if btn(0) or btn(1) then set_state('running') 
             elseif abs(player.dx) >= 0.1 then set_state('sliding')
             else set_state('idle') end
-            -- reset float meter
             player.float_meter = 10
-            -- reset wall jump
             player.prev_wall= "none"
-            -- stop falling
-            player.dy = 0
-            -- snaps player to y grid
-            player.y -= ((player.y+player.h+1)%8)-1
             player.db.c_d = true
-        else
-            player.db.c_d = false
+            player.dy -= 1
+            if player.dy < 0 then
+                player.dy = 0
+                break
+            end
         end
     elseif player.dy < 0 then
-        -- if moving up must be jumping or floating 
         if btn(5) then set_state('jumping')
         else set_state('floating') end    
-        -- bump head
-        if collides_with_map(player,"up",1) then
-            player.dy = 0
+        while (collides_with_map2(
+        player.x,
+        player.y + player.dy,
+        player.w,
+        player.h,
+        'up') & 2) != 0 do
+            player.dy += 1
             player.db.c_u=true
-        else
-            player.db.c_u = false
+            if player.dy > 0 then 
+                player.dy = 0
+                break
+            end
         end
-
+    end
+    if (on_ground() and flr(player.y) % 8 != 0 and player.dy == 0) then 
+        player.y = flr(player.y) - (flr(player.y) % 8)
     end
     -- fan physics
     for fan in all(fans) do 
@@ -236,54 +247,74 @@ function player_collider_update()
     --check collision on x
     --moving left
     if player.dx < 0 then
-        if collides_with_map(player, 'left', 1) then
-            --while get_collision_distance(player.x, player.y, player.w, player.h, player.dx, player.dy, 'left', 1) != 0 do 
-                --player.dx += 1
-            --end
-            player.dx = 0
-            set_state('onleft')
+        while (collides_with_map2(
+        player.x + player.dx,
+        player.y,
+        player.w,
+        player.h,
+        'left') & 2) != 0 do
+            player.dx += 1
+            if not on_ground() then set_state('onleft') end
             player.db.c_l = true
-            while flr(player.x) % 8 != 0 do
-                player.x += 1
+            if player.dx > 0 then 
+                player.dx = 0
+                break
             end
-        elseif adjacent_to_tile(player, 1) == 'l' then
+            --while flr(player.x) % 8 != 0 do
+            --    player.x += 1
+            --end
+        end
+        if adjacent_to_tile(player, 1) == 'l' and not on_ground() then
             set_state('onleft')
         else
             player.on_wall = "none"
             player.db.c_l = false
         end
     elseif player.dx > 0 then
-        if collides_with_map(player, "right", 1) then
-            player.dx = 0
-            set_state('onright')
+        while (collides_with_map2(
+        player.x + player.dx,
+        player.y,
+        player.w,
+        player.h,
+        'right') & 2) != 0 do
+            player.dx -= 1
+            if not on_ground() then set_state('onright') end
             player.on_wall = "r"
             player.db.c_r = true
-            while flr(player.x) % 8 != 0 do
-                player.x -= 1
+            if player.dx < 0 then 
+                player.dx = 0
+                break
             end
-        elseif adjacent_to_tile(player, 1) == 'r' then
+            --while flr(player.x) % 8 != 0 do
+            --    player.x -= 1
+            --end
+        end
+        if adjacent_to_tile(player, 1) == 'r' and not on_ground() then
             set_state('onright')
         else
             player.on_wall = "none"
             player.db.c_r = false
         end
     else
-        local dir = adjacent_to_tile(player, 1)
-        if dir == 'l' then
-            set_state('onleft')
-        elseif dir == 'r' then
-            set_state('onright')
-        else
-            player.db.c_u=false
-            player.db.c_d=false
-            player.db.c_l=false
-            player.db.c_r=false
+        if not on_ground() then 
+            local dir = adjacent_to_tile(player, 1)
+            if dir == 'l' then
+                set_state('onleft')
+            elseif dir == 'r' then
+                set_state('onright')
+            else
+                player.db.c_u=false
+                player.db.c_d=false
+                player.db.c_l=false
+                player.db.c_r=false
+            end
         end
+        
     end
     player.hurtbox.dx = player.dx
     player.hurtbox.dy = player.dy
-    player.hurtbox.x = player.x + 1
-    player.hurtbox.y = player.y + 1
+    player.hurtbox.x = player.x + 2
+    player.hurtbox.y = player.y + 2
 end
 
 function player_update()
@@ -321,6 +352,8 @@ end
 function player_animate()
     if state_is('onleft') or state_is('onright') then
         player.current_sprite = 5
+        if state_is('onleft') then player.flp = true end
+        if state_is('onright') then player.flp = false end
     elseif state_is('jumping') then
         player.current_sprite = 6
     elseif state_is('falling') or state_is('floating') then
@@ -367,6 +400,7 @@ function player_debug_draw()
     
     print('left = '..tostr(player.db.c_l), cam.x + 1, cam.y + 37, debug_color)
     print('right = '..tostr(player.db.c_r), cam.x + 1, cam.y + 43, debug_color)
+    print('y=['..tostr(player.y)..']', cam.x + 1, cam.y + 49, debug_color)
 end
 
 function player_die()

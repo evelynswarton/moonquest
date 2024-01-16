@@ -6,6 +6,7 @@ function init_signs()
     add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 3, 60)
     add_sign('hold ❎ to float', 12, 36)
     add_sign('there are still 100 moons to collect!', 8, 62, true)
+    add_sign('hold ❎ : jump->float', 2, 51)
 end
 
 function add_sign(message, x_tile, y_tile, is_moon_counter)

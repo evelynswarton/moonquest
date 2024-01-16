@@ -3,63 +3,59 @@ function collides_with_block(obj, dir)
     end
 end
 --[[
-function collides_with_map(_obj, _dir, _flag)
-    local x1, x2, y1, y2, dx, dy = _obj.x + _obj.hb.x1, _obj.x + _obj.hb.x2, _obj.y + _obj.hb.y1, _obj.y + _obj.hb.y2, _obj.dx, _obj.dy
-    if _dir == 'left' then
-        return fget(mget((x1 + dx) / 8, (y1 + dy) / 8), _flag) or
-        fget(mget((x1 + dx) / 8, (y2 + dy) / 8), _flag)
-    elseif _dir == 'right' then
-        return fget(mget((x2 + dx) / 8, (y1 + dy) / 8), _flag) or
-        fget(mget((x2 + dx) / 8, (y2 + dy) / 8), _flag)
-    elseif _dir == 'up' then
-        return fget(mget((x1 + dx) / 8, (y1 + dy) / 8), _flag) or
-        fget(mget((x2 + dx) / 8, (y1 + dy) / 8), _flag)
-    else
-        return fget(mget((x1 + dx) / 8, (y2 + dy) / 8), _flag) or
-        fget(mget((x2 + dx) / 8, (y2 + dy) / 8), _flag)
-    end
-end]]
+    O*******
+    ********
+    ********
+    ********
+    ********
+    ********
+    ********
+    O******* [left]
 
-function collides_with_map2(obj, dir, flag)
-    local x = obj.x
-    local y = obj.y
-    local dx = obj.dx
-    local dy = obj.dy
-    local w = obj.w
-    local h = obj.h
+    *******O
+    ********
+    ********
+    ********
+    ********
+    ********
+    ********
+    *******O [right]
 
-    -- Collision box
+    O******O
+    ********
+    ********
+    ********
+    ********
+    ********
+    ********
+    ******** [up]
+
+    ********
+    ********
+    ********
+    ********
+    ********
+    ********
+    ********
+    O******O [down]
+]]--
+
+function collides_with_map2(x, y, w, h, dir)
     local x1, x2, y1, y2
-
-    -- Placing collision box without offsets
-    if dir == "left" then
-        x1, x2, y1, y2 = x, x, y + dy, y + dy - h
-    elseif dir == "right" then
-        x1, x2, y1, y2 = x + w, x + w, y + dy, y + dy - h
-    elseif dir == "up" then
-        x1, x2, y1, y2 = x, x + w, y + dy, y + dy
-    elseif dir == "down" then
-        x1, x2, y1, y2 = x + dx, x + w + dx, y + h, y + h
+    if dir == 'left' then
+        x1, x2 = x / 8, x / 8
+        y1, y2 = y / 8, (y + h) / 8
+    elseif dir == 'right' then
+        x1, x2 = (x + w) / 8, (x  + w) / 8
+        y1, y2 = y / 8, (y + h) / 8
+    elseif dir == 'up' then
+        x1, x2 = x / 8, (x + w) / 8
+        y1, y2 = y / 8, y / 8
+    else 
+        x1, x2 = x / 8, (x + w) / 8
+        y1, y2 = (y + h) / 8, (y + h) / 8
     end
-
-    -- Debug
-    if debug_on then
-        player.db.x1, player.db.y1, player.db.x2, player.db.y2 = x1, y1, x2, y2
-    end
-
-    -- Pixels to tiles
-    x1, x2, y1, y2 = x1 / 8, x2 / 8, y1 / 8, y2 / 8
-
-    -- Check collide and calculate distance (finally)
-    local distance = 0
-    if fget(mget(x1, y1), flag) or
-       fget(mget(x1, y2), flag) or
-       fget(mget(x2, y1), flag) or
-       fget(mget(x2, y2), flag) then
-        distance = (flr(x2) * 8) - (x + w)  -- Calculate distance to collision
-        obj.dx = distance
-    end
-    return distance > 0  -- Return true if there was a collision
+    return fget(mget(x1, y1)) | fget(mget(x2, y2))
 end
 
 function collides_with_map(obj, dir, flag)
