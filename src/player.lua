@@ -16,7 +16,7 @@ player = {
     wljmp_frc = 1.5,
     wljmp_dx = 3.5,
     wljmp_dy = 3.5,
-    wlclm_dy = 3.5,
+    wlclm_dy = 1.8,
     anim = 0,
     hb = {
         x1 = 0,
@@ -45,6 +45,7 @@ player = {
     floating = false,
     on_wall = "none",
     prev_wall = "none",
+    first_wall = true,
     state = "idle",
     --debug
     db = {
@@ -133,6 +134,7 @@ function player_controller_update()
         sfx(62, 3, 4, 4)
         if player.prev_wall == "l" then
             player.dy = -1 * player.wlclm_dy
+            player.first_wall = false
         else
             player.dy= -1 * player.wljmp_dy
         end
@@ -145,6 +147,7 @@ function player_controller_update()
         sfx(62, 3, 4, 4)
         if player.prev_wall == "r" then
             player.dy = -1 * player.wlclm_dy
+            player.first_wall = false
         else
             player.dy = -1 * player.wljmp_dy
         end
@@ -203,6 +206,7 @@ function player_collider_update()
             if btn(0) or btn(1) then set_state('running') 
             elseif abs(player.dx) >= 0.1 then set_state('sliding')
             else set_state('idle') end
+            player.first_wall = true
             player.float_meter = 10
             player.prev_wall= "none"
             player.db.c_d = true
@@ -346,6 +350,9 @@ function player_update()
     end
     if player.x > map_end - player.w then
         player.x = map_end - player.w
+    end
+    if not umbrella_collected then
+        player.float_meter = 0
     end
 end
 

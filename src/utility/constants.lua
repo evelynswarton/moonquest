@@ -1,6 +1,6 @@
 -- constants for player spawn location
-default_spawn_x = 8
-default_spawn_y = 512 - 32
+default_spawn_x =  2 * 8
+default_spawn_y =  35 * 8
 
 pause_controls_duration = 0.75
 
@@ -30,3 +30,5 @@ debug_color = 12
 save_flag = 3
 moon_flag = 4
 block_flag = 5
+umb_spawn_x = 45 * 8
+umb_spawn_y = 35 * 8

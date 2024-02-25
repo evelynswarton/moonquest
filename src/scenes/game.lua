@@ -1,3 +1,4 @@
+
 function game.update()
     player_update()
     player_animate()
@@ -47,6 +48,15 @@ function game.update()
         if pause_controls_end - pause_controls_start >= pause_controls_duration then
             controls_on = true
         end
+    end
+    local umbrella_pickup = {
+        x = umb_spawn_x,
+        y = umb_spawn_y,
+        w = 7,
+        h = 7
+    }
+    if touch(player, umbrella_pickup) then
+        umbrella_collected = true
     end
 end
 
@@ -101,7 +111,9 @@ function game.draw()
     end
 
     -- Float meter for umbrella
-    draw_float_meter()
+    if umbrella_collected then
+        draw_float_meter()
+    end
     for i = 1, #enm do
         local myenm=enm[i]
         spr(myenm.spr, myenm.x, myenm.y)	
@@ -151,6 +163,7 @@ end
 
 function game.init()
     music(30)
+    umbrella_collected = false
     bg_graphics = {}
     for i = 0, 10 do 
         add_circ()

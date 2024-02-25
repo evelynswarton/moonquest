@@ -64,21 +64,30 @@ function add_umb()
         y=0,
         ty=0,
         spd=0.8,
+        pickup_anim=0,
         draw=function(self)
-            spr(9,self.x,self.y,1,1,true)
+            if umbrella_collected then
+                spr(9,self.x,self.y,1,1,true)
+            else
+                spr(9, umb_spawn_x, (umb_spawn_y) + 4 * sin(self.pickup_anim))
+            end
         end,
         update=function(self)
-            self.ty=player.y+(player.h/2)-7
-            self.x=player.x+5
-            --interpolate to ty with t=spd
-            self.y=(self.spd*self.y)+((1-self.spd)*self.ty)
-            --top bound
-            if self.y<self.ty-5 then
-                self.y=self.ty-5
-            end
-            --bottom bound
-            if self.y>self.ty+2 then
-                self.y=self.ty+2
+            if umbrella_collected then
+                self.ty=player.y+(player.h/2)-7
+                self.x=player.x+5
+                --interpolate to ty with t=spd
+                self.y=(self.spd*self.y)+((1-self.spd)*self.ty)
+                --top bound
+                if self.y<self.ty-5 then
+                    self.y=self.ty-5
+                end
+                --bottom bound
+                if self.y>self.ty+2 then
+                    self.y=self.ty+2
+                end
+            else
+                self.pickup_anim += 0.01
             end
         end
     })
