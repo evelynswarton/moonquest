@@ -37,6 +37,9 @@ function game.update()
     for block in all(interactive_blocks) do
         block:update()
     end
+    for block in all(dissolve_blocks) do
+        block:update()
+    end
     for button in all(buttons) do 
         button:update()
     end
@@ -102,6 +105,9 @@ function game.draw()
         button:draw()
     end
     for block in all(interactive_blocks) do
+        block:draw()
+    end
+    for block in all(dissolve_blocks) do
         block:draw()
     end
     -- Render player
@@ -187,12 +193,19 @@ function game.init()
             end
         end
     end
+
     buttons = {}
     add_all_buttons()
+
     floating_spikes = {}
     add_all_spikes()
+
     fans = {}
     add_all_fans()
+
+    dissolve_blocks = {}
+    init_dissolve_blocks()
+
     signs = {}
     splashes = {}
     init_signs()

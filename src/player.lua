@@ -196,12 +196,12 @@ function player_collider_update()
         if btn(5) then set_state('floating') else set_state('falling') end
         player.dy = clamp(player.dy, player.max_dy)
         -- touch ground
-        while (collides_with_map2(
+        while ((collides_with_map2(
         player.x,
         player.y + player.dy,
         player.w,
         player.h,
-        'down') & 1) != 0 do
+        'down') & 1) != 0) do
             -- fix state
             if btn(0) or btn(1) then set_state('running') 
             elseif abs(player.dx) >= 0.1 then set_state('sliding')
