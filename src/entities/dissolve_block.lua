@@ -1,6 +1,5 @@
-dissolve_speed = 0.55 
+--dissolve_speed = 0.55 
 dissolve_respawn_duration = 180
-dissolve_recovery_speed = 0.001
 
 function init_dissolve_blocks()
     --[[
@@ -27,24 +26,28 @@ function add_dissolve_block(x, y)
         w = 8,
         h = 8,
         hb = {
-            x = x * 8,
+            x = (x * 8) - 1,
             y = (y * 8) - 1,
-            w = 8,
+            w = 10,
             h = 2
         },
-        durability = 100,
+        durability = 3,
         respawn_timer = 0,
+        touching_player = false,
         update = function(self)
-            if touch(self.hb, player) then
-                self.durability -= dissolve_speed
+            if not self.touching_player then 
+                if touch(self.hb, player) then
+                    self.touching_player = true
+                end
             else
-                if self.durability > 0 then
-                    self.durability = min(self.durability + dissolve_recovery_speed, 100)
+                if not touch(self.hb, player) then
+                    self.touching_player = false
+                    self.durability -= 1
                 end
             end
-            if self.durability >= 66 then
+            if self.durability > 2 then
                 mset(self.x_tile, self.y_tile, 54)
-            elseif self.durability >= 33 then
+            elseif self.durability > 1 then
                 mset(self.x_tile, self.y_tile, 32)
             elseif self.durability > 0 then
                 mset(self.x_tile, self.y_tile, 17)
@@ -61,7 +64,7 @@ function add_dissolve_block(x, y)
                 self.respawn_timer += 1
                 if self.respawn_timer >= dissolve_respawn_duration then
                     self.respawn_timer = 0
-                    self.durability = 100
+                    self.durability = 3
                 end
             end
         end,

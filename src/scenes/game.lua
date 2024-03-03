@@ -43,6 +43,9 @@ function game.update()
     for button in all(buttons) do 
         button:update()
     end
+    for laser in all(lasers) do
+        laser:update()
+    end
     if debug_on then
         debug_update()
     end
@@ -77,6 +80,9 @@ function game.draw()
     -- First render background rain
     for drop in all(rain) do
         drop:draw()
+    end
+    for l in all(lasers) do 
+        l:draw()
     end
 
     -- Render map
@@ -210,6 +216,9 @@ function game.init()
     splashes = {}
     init_signs()
     player_init(default_spawn_x, default_spawn_y)
+
+    add_all_lasers()
+
     game.reset()
     num_deaths = 0
     controls_on = true

@@ -2,7 +2,7 @@
 lasers = {}
 
 -- animation speed: fps
-laser_animation_speed = 4
+laser_animation_speed = 2
 
 -- function to go through map and
 -- spawn all lasers
@@ -18,24 +18,46 @@ function add_all_lasers()
 end
 
 -- function to instantiate a laser
-function add_laser(x, y0, y1)
+function add_laser(x, y)
     add(lasers, {
         x = x,
-        y0 = y0,
-        y1 = y1,
+        y = y,
+        w = 8,
+        h = 8,
         t = 0,
         y_offset = 0,
+        is_top = true,
+        is_bottom = true,
         update = function(self)
             self.t += 1
             if self.t > laser_animation_speed then
-                self.y_offset += 1
-                self.y_offset = self.y_offset % 8
+                self.y_offset = (self.y_offset + 1) % 8
                 self.t = 0
+            end
+            for l in all(lasers) do
+                if l.y == self.y - 8 then 
+                    self.is_top = false
+                elseif l.y == self.y + 8 then
+                    self.is_bottom = false
+                end
             end
         end,
         draw = function(self)
-            for y = (self.y0-1), (self.y1+1) do
-                spr(self.x, y + self.y_offset, 59)
+            spr(59, self.x, self.y + self.y_offset)
+            spr(59, self.x, self.y + self.y_offset - 8)
+            if self.is_top then
+                local r = rnd(2)
+                local x, y = self.x + 3.5, self.y - 1
+                circfill(x, y, r + 2, 8)
+                circfill(x, y, r + 1, 14)
+                circfill(x, y, r + 0, 7)
+            end
+            if self.is_bottom then
+                local r = rnd(2)
+                local x, y = self.x + 3.5, self.y + 8
+                circfill(x, y, r + 2, 8)
+                circfill(x, y, r + 1, 14)
+                circfill(x, y, r + 0, 7)
             end
         end
     })
