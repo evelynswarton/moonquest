@@ -194,3 +194,8 @@ function adjacent_to_tile(obj, flag)
         return 'none'
     end
 end
+
+function is_off_screen(obj)
+    local _ENV = obj
+    return x > 1016 or x + w < 0 or y > 504 or y + h < 0
+end

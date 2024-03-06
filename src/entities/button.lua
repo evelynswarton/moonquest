@@ -34,8 +34,8 @@ function add_button(x_tile, y_tile, x_target, y_target)
         end,
         update = function(self)
             local active = false
-            for block in all(interactive_blocks) do 
-                if touch(self, block) then
+            for ib in all(interactive_blocks) do 
+                if touch(self, ib) then
                     active = true
                     destroy_target(self.target_x, self.target_y)
                 end

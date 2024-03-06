@@ -47,6 +47,8 @@ player = {
     prev_wall = "none",
     first_wall = true,
     state = "idle",
+    wall_hang_time = 15,
+    wall_hang_timer = 0,
     --debug
     db = {
         x1=0, y1=0,
@@ -102,15 +104,37 @@ end
 function player_controller_update()
     -- l/r movement
     if btn(⬅️) then
-        player.dx -= acceleration
-        if on_ground() then set_state('running') end
-        player.flp = true
+        if state_is('onright') then
+            player.dx = 0
+            if player.wall_hang_timer < player.wall_hang_time then
+                player.wall_hang_timer += 1
+            else
+                player.dx -= acceleration
+                player.wall_hang_timer = 0
+            end
+        else
+            player.dx -= acceleration
+            if on_ground() then set_state('running') end
+            player.flp = true
+        end
     end
     if btn(➡️) then
-        player.dx += acceleration
-        if on_ground() then set_state('running') end
-        player.flp = false
+        if state_is('onleft') then
+            player.dx = 0
+            if player.wall_hang_timer < player.wall_hang_time then
+                player.wall_hang_timer += 1
+            else
+                player.dx += acceleration
+                player.wall_hang_timer = 0
+            end
+        else
+            player.dx += acceleration
+            if on_ground() then set_state('running') end
+            player.flp = false
+        end
     end
+    if state_is('onleft') and not btn(1) then player.wall_hang_timer = 0 end
+    if state_is('onright') and not btn(0) then player.wall_hang_timer = 0 end
     -- slide
     if state_is('running')
         and not btn(⬅️)
@@ -416,5 +440,8 @@ function player_die()
     num_deaths += 1
     game.reset()
     controls_on = false
+    for ib in all(interactive_blocks) do
+        ib_rspwn(ib)
+    end
     pause_controls_start = time()
 end

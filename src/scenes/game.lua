@@ -177,6 +177,7 @@ function game.init()
     music(30)
     umbrella_collected = false
     bg_graphics = {}
+    add_all_lasers()
     for i = 0, 10 do 
         add_circ()
     end
@@ -217,7 +218,6 @@ function game.init()
     init_signs()
     player_init(default_spawn_x, default_spawn_y)
 
-    add_all_lasers()
 
     game.reset()
     num_deaths = 0
