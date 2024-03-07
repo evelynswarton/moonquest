@@ -165,6 +165,13 @@ function game.reset()
     for i = 1, 100 do
         add_rain()
     end
+    for ib in all(interactive_blocks) do
+        ib_rspwn(ib)
+    end
+    for db in all(dissolve_blocks) do
+        db.durability = 3
+        db.is_dead = false
+    end
     enm={}
     local my_en={}
     my_en.x=90

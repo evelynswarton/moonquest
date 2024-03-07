@@ -1,5 +1,5 @@
 --dissolve_speed = 0.55 
-dissolve_respawn_duration = 180
+dissolve_respawn_duration = 360
 
 function init_dissolve_blocks()
     --[[
@@ -44,6 +44,9 @@ function add_dissolve_block(x, y)
                     self.touching_player = false
                     self.durability -= 1
                 end
+            end
+            if not controls_on then
+                self.durability = 3
             end
             if self.durability > 2 then
                 mset(self.x_tile, self.y_tile, 54)

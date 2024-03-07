@@ -1,6 +1,14 @@
 -- path = {pos1, pos2, ..., posn}
 -- pos = {x = ?, y = ?}
 function add_all_spikes()
+    add_floating_spike(two_point_path(44, 61, 53, 61), 2)
+    add_floating_spike(two_point_path(64, 62, 90, 62), 0.3)
+    add_floating_spike(two_point_path(77, 63, 77, 59), 2)
+    add_floating_spike(two_point_path(84, 63, 84, 59), 2)
+    add_floating_spike(two_point_path(35, 60, 35, 55), 1)
+    add_floating_spike(two_point_path(63, 56, 71, 56), 2)
+    add_floating_spike(four_point_path(60, 59, 65, 63), 2)
+    add_floating_spike(two_point_path(74, 57, 89, 57), 2)
     --[[
     add_floating_spike({
         {x = 16 * 8, y = 2 * 8},

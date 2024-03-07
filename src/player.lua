@@ -438,10 +438,7 @@ function player_die()
     sfx(62, 3, 12, 4)
     add_wipe(8)
     num_deaths += 1
-    game.reset()
     controls_on = false
-    for ib in all(interactive_blocks) do
-        ib_rspwn(ib)
-    end
     pause_controls_start = time()
+    game.reset()
 end
