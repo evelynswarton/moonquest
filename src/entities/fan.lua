@@ -1,4 +1,7 @@
 function add_all_fans()
+    for y = 50, 27, -8 do
+        add_fan(63, y, 0, 0.3)
+    end
     --add_fan(0, 58, 0, 0.3)
     --[[
     add_fan(78, 17, 0, 0.3)
