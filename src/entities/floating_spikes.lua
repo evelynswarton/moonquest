@@ -4,8 +4,10 @@ function add_all_spikes()
     add_floating_spike(two_point_path(35, 60, 35, 55), 1)
     add_floating_spike(two_point_path(63, 56, 71, 56), 2)
     add_floating_spike(two_point_path(74, 57, 89, 57), 2)
+    local phase = 0
     for x = 75, 91 do
-        add_floating_spike(two_point_path(x, 54, x, 52), 0.3 + (x / 100))
+        add_floating_spike(two_point_path(x, 54, x, 52), .8, phase)
+	phase += 0.09
     end
 end
 
@@ -31,7 +33,7 @@ function n_point_path(n, x_array, y_array)
     return path
 end
 
-function add_floating_spike(path, speed, sprite_sheet, num_frames, frame_duration)
+function add_floating_spike(path, speed, phase)
     local x_positions = {}
     local y_positions = {}
     for point in all(path) do 
@@ -47,7 +49,7 @@ function add_floating_spike(path, speed, sprite_sheet, num_frames, frame_duratio
         h = 8,
         path_length = #x_positions,
         speed = speed,
-        t = 0,  -- Parameter for interpolation (0 to 1)
+        t = phase or 0,  -- Parameter for interpolation (0 to 1)
         current_point_index = 1,
         frame = 1,  -- Current frame of animation
         frame_duration = .05,  -- Time between frame changes
@@ -63,7 +65,9 @@ function add_floating_spike(path, speed, sprite_sheet, num_frames, frame_duratio
                 if self.current_point_index > self.path_length then
                     self.current_point_index = 1 -- Wrap around to the beginning
                 end
-                self.t = 0
+		while self.t >= 1 do
+			self.t -= 1
+		end
             end
             
             -- Interpolate between the current and next point

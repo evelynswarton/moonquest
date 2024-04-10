@@ -181,7 +181,7 @@ function game.reset()
 end
 
 function game.init()
-    music(30)
+    --music(30)
     umbrella_collected = false
     bg_graphics = {}
     add_all_lasers()

@@ -1,6 +1,6 @@
 -- constants for player spawn location
-default_spawn_x = 57 *8 or 2 * 8
-default_spawn_y = 60 * 8 or 35 * 8
+default_spawn_x = 93 *8 or 2 * 8
+default_spawn_y = 62 * 8 or 35 * 8
 
 pause_controls_duration = 0.75
 

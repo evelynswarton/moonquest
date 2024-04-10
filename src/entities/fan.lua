@@ -14,7 +14,8 @@ function add_all_fans()
     add_fan(57, 30, 0, 0.3)
     add_fan(61, 30, 0, 0.3)
     add_fan(68, 30, 0, 0.3)
-    add_fan(72, 30, 0, 0.3)
+    add_fan(72, 29, 0, 0.3)
+    add_fan(72, 24, 0, 0.3)
 ]]
 end
 
