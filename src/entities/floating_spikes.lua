@@ -9,6 +9,10 @@ function add_all_spikes()
         add_floating_spike(two_point_path(x, 54, x, 52), .8, phase)
 	phase += 0.09
     end
+    add_floating_spike(two_point_path(66, 26, 66, 20), 2)
+    add_floating_spike(two_point_path(86, 29, 86, 25), 2)
+    add_floating_spike(two_point_path(96, 23, 108, 23), 2)
+    add_floating_spike(two_point_path(98, 21, 98, 29), 2)
 end
 
 function two_point_path(x1, y1, x2, y2)

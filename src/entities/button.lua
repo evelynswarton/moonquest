@@ -13,6 +13,11 @@ function add_all_buttons()
     add_button(94, 62, 91, 59)
     add_button(93, 62, 91, 59)
     add_button(92, 62, 91, 59)
+    add_button(119, 35, 116, 34)
+    add_button(120, 35, 116, 34)
+    add_button(121, 35, 116, 34)
+    add_button(122, 35, 116, 34)
+    add_button(123, 35, 116, 34)
 end
 
 function add_button(x_tile, y_tile, x_target, y_target)

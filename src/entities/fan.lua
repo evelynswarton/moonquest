@@ -2,21 +2,13 @@ function add_all_fans()
     for y = 50, 27, -8 do
         add_fan(63, y, 0, 0.3)
     end
-    --add_fan(0, 58, 0, 0.3)
-    --[[
-    add_fan(78, 17, 0, 0.3)
-    add_fan(78, 13, 0, 0.3)
-    add_fan(78, 9, 0, 0.3)
-    add_fan(84, 18, 0, 0.3)
-    add_fan(64, 19, 0, 0.3)
-    add_fan(69, 17, 0, 0.3)
-    add_fan(73, 17, 0, 0.3)
-    add_fan(57, 30, 0, 0.3)
-    add_fan(61, 30, 0, 0.3)
-    add_fan(68, 30, 0, 0.3)
     add_fan(72, 29, 0, 0.3)
-    add_fan(72, 24, 0, 0.3)
-]]
+    add_fan(83, 30, 0, 0.3)
+    add_fan(88, 29, 0, 0.3)
+    add_fan(98, 25, 0, 0.2)
+    add_fan(109, 33, 0, 0.3)
+    add_fan(116, 33, 0, 0.3)
+    add_fan(121, 32, 0, 0.3)
 end
 
 function add_fan(x, y, r, f)
