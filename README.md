@@ -1,26 +1,22 @@
 # MOON QUEST
-
 <img src="cover.png">
 
 ## Description:
- A dead simple percision platformer for the PICO-8 fantasy console. The project is still very much an alpha build and a work in progress, and I will soon implement features such as moving hazards and a victory screen. All code is written for the PICO-8 fantasy console, which uses LUA as its base.
-## How to install/play:
-### Play online:
+MoonQuest is a PICO8 platformer inspired by some of my favorite games such as Super Mario World, Super Meat Boy, and Celeste! You have to collect all the moons!
+
+## How to play:
+
+### Option 1 - Online
 Simply go to https://1z1gh0st.itch.io/moon-quest and start playing right in your browser!
-### Install locally (only if you own PICO-8):
-Download `moonquest.p8` from the files section. Open the PICO-8 console. In the console type `folder` to open the directory on your desktop. Move the file `moonquest.p8` into the folder. Then in the PICO-8 console type:
-```
-load moonquest.p8
-run moonquest.p8
-```
+### Option 2 - Download
+Download this repository, unzip the folder, copy the folder to your PICO8 carts folder. Then launch PICO8 and type `load moonquest/moonquest.p8`. Finally, type `run moonquest/moonquest.p8` or press `control+r`.
+This game is not yet on the splore page, but I will do that once the game is completed.
+
 ## Guide:
-PICO-8 has 6 main inputs, the arrow keys and two other inputs, which are typically bound to 'z' and 'x'. Use the arrow keys to move and press 'x' to jump.
-## Credits:
-Philip Warton:
-- Code
-- Art
-- Music
-- Level Design
+PICO-8 has 6 main inputs, the arrow keys and two other inputs, which are typically bound to 'z' and 'x'. Use the arrow keys to move and press 'x' to jump, 'z' interacts with things like blocks and signs.
+
+`Made with <3 by 1z1gh0st | gh0st.lv`
+
 ## License:
 This project uses a GNU GPL-v3 license.
 
