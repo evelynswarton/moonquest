@@ -1,6 +1,6 @@
 -- constants for player spawn location
---default_spawn_x = 102 *8 or 2 * 8
---default_spawn_y = 21 * 8 or 35 * 8
+--default_spawn_x = 68 *8 or 2 * 8
+--default_spawn_y = 27 * 8 or 35 * 8
 
 default_spawn_x = 2 * 8
 default_spawn_y = 35 * 8
@@ -32,5 +32,5 @@ debug_color = 12
 save_flag = 3
 moon_flag = 4
 block_flag = 5
-umb_spawn_x = default_spawn_x or 45 * 8
-umb_spawn_y = default_spawn_y or 35 * 8
+umb_spawn_x = 45 * 8
+umb_spawn_y = 35 * 8

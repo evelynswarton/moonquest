@@ -5,10 +5,14 @@ function add_all_fans()
     add_fan(72, 29, 0, 0.3)
     add_fan(83, 30, 0, 0.3)
     add_fan(88, 29, 0, 0.3)
-    add_fan(98, 25, 0, 0.2)
+    add_fan(98, 25, 0, 0.3)
     add_fan(109, 33, 0, 0.3)
     add_fan(116, 33, 0, 0.3)
     add_fan(121, 32, 0, 0.3)
+    add_fan(101, 43, 0, 0.3)
+    add_fan(83, 49, 0, 0.3)
+    add_fan(105, 56, 0, 0.3)
+    add_fan(101, 63, 0, 0.3)
 end
 
 function add_fan(x, y, r, f)
@@ -17,7 +21,7 @@ function add_fan(x, y, r, f)
             x = x * 8,
             y = y * 8,
             force = f,
-            field = { x = x * 8, y = y * 8 - 32, w = 16, h = 32 },
+            field = { x = x * 8, y = y * 8 - 80, w = 16, h = 80 },
             rot = r % 4,
             sprite_sheet = { 89, 90, 91, 75, 91, 90, 89 },
             anim_idx = 0,

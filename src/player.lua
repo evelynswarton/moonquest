@@ -262,13 +262,29 @@ function player_collider_update()
     end
     -- fan physics
     for fan in all(fans) do 
-        if touch(player, fan.field) then
+        if touch(player, fan.field) and player.dy != 0 then
             if btn(5) and player.float_meter > 0 then
                 set_state('floating')
                 player.dy -= fan.force
+		player.dy = max(player.dy, -1)
             else 
-                player.dy -= fan.force / 2
+                player.dy -= fan.force * 0.60 
+		if player.dy <= 1 then
+			player.dy += 0.1
+		end
+		player.dy = min(player.dy, 1)
             end
+        end
+    end
+    if player.dy < 0 then
+        while (collides_with_map2(
+        player.x,
+        player.y + player.dy,
+        player.w,
+        player.h,
+        'up') & 2) != 0 do
+            player.dy += 1
+            player.db.c_u=true
         end
     end
 

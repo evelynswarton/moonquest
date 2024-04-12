@@ -1,7 +1,7 @@
 function menu.init()
     logo_x = 0
     logo_y = 0
-    --music(46)
+    music(46)
     blink = {
         colors = {0,2,8,7,8,2},
         index = 0,

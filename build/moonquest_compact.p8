@@ -1,12 +1,13 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
+__lua__
 ---------------------------
 -- ~ * + moonquest + * ~ --
 --       ^^^^^^^^^       --
 -- a 1z1gh0st experience --
 ---------------------------
 
--- file built with flatten_cart.py
+-- file can be built with flatten_cart.py
 -- each included file is assigned to one tab
 -- for the source code in its original format
 -- see github.com/1z1gh0st
@@ -168,493 +169,493 @@ end
 -->8
 --src/player.lua
 player = {
-    type = 'player',
-    current_sprite = 1,
-    x = 0,
-    y = 0,
-    w = 7,
-    h = 7,
-    flp = false,
-    dx = 0,
-    dy = 0,
-    max_dx = 1.5,
-    max_dy = 100,
-    umb_dy = 0.5,
-    float_meter = 10,
-    boost = 3.5,
-    wljmp_frc = 1.5,
-    wljmp_dx = 3.5,
-    wljmp_dy = 3.5,
-    wlclm_dy = 1.8,
-    anim = 0,
-    hb = {
-        x1 = 0,
-        x2 = 7,
-        y1 = 0,
-        y2 = 7
-    },
-    hurtbox = {
-        x = 2,
-        y = 2,
-        w = 2,
-        h = 2,
-        dx = 0,
-        dy = 0,
-        hb = {
-            x1 = 0,
-            x2 = 2,
-            y1 = 0,
-            y2 = 2
-        }
-    },
-    running = false,
-    jumping = false,
-    sliding = false,
-    landed = false,
-    floating = false,
-    on_wall = "none",
-    prev_wall = "none",
-    first_wall = true,
-    state = "idle",
-    wall_hang_time = 15,
-    wall_hang_timer = 0,
-    --debug
-    db = {
-        x1=0, y1=0,
-        x2=0, y2=0
-    }
+ type = 'player',
+ current_sprite = 1,
+ x = 0,
+ y = 0,
+ w = 7,
+ h = 7,
+ flp = false,
+ dx = 0,
+ dy = 0,
+ max_dx = 1.5,
+ max_dy = 100,
+ umb_dy = 0.5,
+ float_meter = 10,
+ boost = 3.5,
+ wljmp_frc = 1.5,
+ wljmp_dx = 3.5,
+ wljmp_dy = 3.5,
+ wlclm_dy = 1.8,
+ anim = 0,
+ hb = {
+  x1 = 0,
+  x2 = 7,
+  y1 = 0,
+  y2 = 7
+ },
+ hurtbox = {
+  x = 2,
+  y = 2,
+  w = 2,
+  h = 2,
+  dx = 0,
+  dy = 0,
+  hb = {
+   x1 = 0,
+   x2 = 2,
+   y1 = 0,
+   y2 = 2
+  }
+ },
+ running = false,
+ jumping = false,
+ sliding = false,
+ landed = false,
+ floating = false,
+ on_wall = "none",
+ prev_wall = "none",
+ first_wall = true,
+ state = "idle",
+ wall_hang_time = 15,
+ wall_hang_timer = 0,
+ --debug
+ db = {
+  x1=0, y1=0,
+  x2=0, y2=0
+ }
 }
 
 function player_init(_x, _y)
-    player.x = _x
-    player.y = _y
-    player.dx = 0
-    player.dy = 0
+ player.x = _x
+ player.y = _y
+ player.dx = 0
+ player.dy = 0
 end
 
 function player_physics_update()
-     -- physics
-     player.dy += gravity
+  -- physics
+  player.dy += gravity
 
-     -- bound floating fall speed
-     if state_is('floaitng') then
-         if player.dy > player.umb_dy then
-             player.dy = player.umb_dy
-         end
-     end
+  -- bound floating fall speed
+  if state_is('floaitng') then
+   if player.dy > player.umb_dy then
+    player.dy = player.umb_dy
+   end
+  end
 
-     -- bound wall slide speed
-     if state_is('onleft') or state_is('onright') then
-         if player.dy > 0 then
-             player.dy = clamp(player.dy, max_wall_slide_speed)
-         end
-         -- wall slide dust
-         if player.dy > 0.5 then
-             if state_is('onleft') then
-                 add_dust(player.x, player.y, rnd(1), player.dy)--, player.dx, player.dy)
-             else
-                 add_dust(player.x + player.w, player.y, -rnd(1), player.dy)--, player.dx, player.dy)
-             end
-         end
-     end
-     -- ground slide dust
-     if state_is('sliding') then
-        if abs(player.dx) > 0.75 then
-            add_dust(player.x + player.w / 2, player.y + player.h, player.dx, player.dy)
-        end 
-        if abs(player.dx) < 0.1 then 
-            set_state('idle')
-            player.dx = 0
-        end
-     end
-     player.dx *= (1 - floor_friction) 
+  -- bound wall slide speed
+  if state_is('onleft') or state_is('onright') then
+   if player.dy > 0 then
+    player.dy = clamp(player.dy, max_wall_slide_speed)
+   end
+   -- wall slide dust
+   if player.dy > 0.5 then
+    if state_is('onleft') then
+     add_dust(player.x, player.y, rnd(1), player.dy)--, player.dx, player.dy)
+    else
+     add_dust(player.x + player.w, player.y, -rnd(1), player.dy)--, player.dx, player.dy)
+    end
+   end
+  end
+  -- ground slide dust
+  if state_is('sliding') then
+  if abs(player.dx) > 0.75 then
+   add_dust(player.x + player.w / 2, player.y + player.h, player.dx, player.dy)
+  end 
+  if abs(player.dx) < 0.1 then 
+   set_state('idle')
+   player.dx = 0
+  end
+  end
+  player.dx *= (1 - floor_friction) 
 end
 
 function player_controller_update()
-    -- l/r movement
-    if btn(⬅️) then
-        if state_is('onright') then
-            player.dx = 0
-            if player.wall_hang_timer < player.wall_hang_time then
-                player.wall_hang_timer += 1
-            else
-                player.dx -= acceleration
-                player.wall_hang_timer = 0
-            end
-        else
-            player.dx -= acceleration
-            if on_ground() then set_state('running') end
-            player.flp = true
-        end
-    end
-    if btn(➡️) then
-        if state_is('onleft') then
-            player.dx = 0
-            if player.wall_hang_timer < player.wall_hang_time then
-                player.wall_hang_timer += 1
-            else
-                player.dx += acceleration
-                player.wall_hang_timer = 0
-            end
-        else
-            player.dx += acceleration
-            if on_ground() then set_state('running') end
-            player.flp = false
-        end
-    end
-    if state_is('onleft') and not btn(1) then player.wall_hang_timer = 0 end
-    if state_is('onright') and not btn(0) then player.wall_hang_timer = 0 end
-    -- slide
-    if state_is('running')
-        and not btn(⬅️)
-        and not btn(➡️) then
-        set_state('sliding')
-    end
-    -- jump
-    if state_is('jumping') and player.dy >= 0 then 
-        set_state('falling')
-    end
-    if btnp(❎) and on_ground() then
-        player.dy -= player.boost
-        sfx(62, 3, 4, 4)
-        set_state('jumping')
-    --let go of ❎ for short hop
-    elseif not btn(❎) and state_is('jumping') then
-        player.dy = 0
-        set_state('falling')
-    --wall jump left
-    elseif btnp(❎) and state_is('onleft') then
-        sfx(62, 3, 4, 4)
-        if player.prev_wall == "l" then
-            player.dy = -1 * player.wlclm_dy
-            player.first_wall = false
-        else
-            player.dy= -1 * player.wljmp_dy
-        end
-        player.prev_wall = "l"
-        player.dx += player.wljmp_dx
-        set_state('jumping')
-        --player.jumping=true
-    --wall jump right
-    elseif btnp(❎) and state_is('onright') then
-        sfx(62, 3, 4, 4)
-        if player.prev_wall == "r" then
-            player.dy = -1 * player.wlclm_dy
-            player.first_wall = false
-        else
-            player.dy = -1 * player.wljmp_dy
-        end
-        player.prev_wall = "r"
-        player.dx -= player.wljmp_dx
-        set_state('jumping')
-    --float
-    elseif btn(❎) and (state_is('falling') or state_is('floating')) and player.float_meter > 0 then
-        if player.dy > player.umb_dy then
-            player.dy = player.umb_dy
-        end
-        set_state('floating')
-        player.float_meter -= float_depletion_rate
-    end
+ -- l/r movement
+ if btn(⬅️) then
+  if state_is('onright') then
+   player.dx = 0
+   if player.wall_hang_timer < player.wall_hang_time then
+    player.wall_hang_timer += 1
+   else
+    player.dx -= acceleration
+    player.wall_hang_timer = 0
+   end
+  else
+   player.dx -= acceleration
+   if on_ground() then set_state('running') end
+   player.flp = true
+  end
+ end
+ if btn(➡️) then
+  if state_is('onleft') then
+   player.dx = 0
+   if player.wall_hang_timer < player.wall_hang_time then
+    player.wall_hang_timer += 1
+   else
+    player.dx += acceleration
+    player.wall_hang_timer = 0
+   end
+  else
+   player.dx += acceleration
+   if on_ground() then set_state('running') end
+   player.flp = false
+  end
+ end
+ if state_is('onleft') and not btn(1) then player.wall_hang_timer = 0 end
+ if state_is('onright') and not btn(0) then player.wall_hang_timer = 0 end
+ -- slide
+ if state_is('running')
+  and not btn(⬅️)
+  and not btn(➡️) then
+  set_state('sliding')
+ end
+ -- jump
+ if state_is('jumping') and player.dy >= 0 then 
+  set_state('falling')
+ end
+ if btnp(❎) and on_ground() then
+  player.dy -= player.boost
+  sfx(62, 3, 4, 4)
+  set_state('jumping')
+ --let go of ❎ for short hop
+ elseif not btn(❎) and state_is('jumping') then
+  player.dy = 0
+  set_state('falling')
+ --wall jump left
+ elseif btnp(❎) and state_is('onleft') then
+  sfx(62, 3, 4, 4)
+  if player.prev_wall == "l" then
+   player.dy = -1 * player.wlclm_dy
+   player.first_wall = false
+  else
+   player.dy= -1 * player.wljmp_dy
+  end
+  player.prev_wall = "l"
+  player.dx += player.wljmp_dx
+  set_state('jumping')
+  --player.jumping=true
+ --wall jump right
+ elseif btnp(❎) and state_is('onright') then
+  sfx(62, 3, 4, 4)
+  if player.prev_wall == "r" then
+   player.dy = -1 * player.wlclm_dy
+   player.first_wall = false
+  else
+   player.dy = -1 * player.wljmp_dy
+  end
+  player.prev_wall = "r"
+  player.dx -= player.wljmp_dx
+  set_state('jumping')
+ --float
+ elseif btn(❎) and (state_is('falling') or state_is('floating')) and player.float_meter > 0 then
+  if player.dy > player.umb_dy then
+   player.dy = player.umb_dy
+  end
+  set_state('floating')
+  player.float_meter -= float_depletion_rate
+ end
 end
 
 function player_collider_update()
-    --check hitbox for bad things
-    local hb = player.hurtbox
-    if player.dx < 0 and collides_with_map(hb, 'left', 2)
-    or player.dx > 0 and collides_with_map(hb, 'right', 2)
-    or player.dy > 0 and collides_with_map(hb, 'up', 2)
-    or player.dy < 0 and collides_with_map(hb, 'down', 2)
-    --check if fallen off map
-    or player.y > 512 then
-        player_die()
-    end
-    -- check if touched a floating spike
-    for spike in all(floating_spikes) do 
-        if touch(player.hurtbox, spike) then
-            player_die()
-        end
-    end
-    --check hitbox for good things
-    for m in all(moons) do
-        if touch(player, m) then
-            sfx(62, 3, 0, 4)
-            num_moons_collected += 1
-            add_swoosh(m.x + 0.5 * m.w, m.y + 0.5 * m.h)
-            del(moons, m)
-        end
-    end
+ --check hitbox for bad things
+ local hb = player.hurtbox
+ if player.dx < 0 and collides_with_map(hb, 'left', 2)
+ or player.dx > 0 and collides_with_map(hb, 'right', 2)
+ or player.dy > 0 and collides_with_map(hb, 'up', 2)
+ or player.dy < 0 and collides_with_map(hb, 'down', 2)
+ --check if fallen off map
+ or player.y > 512 then
+  player_die()
+ end
+ -- check if touched a floating spike
+ for spike in all(floating_spikes) do 
+  if touch(player.hurtbox, spike) then
+   player_die()
+  end
+ end
+ --check hitbox for good things
+ for m in all(moons) do
+  if touch(player, m) then
+   sfx(62, 3, 0, 4)
+   num_moons_collected += 1
+   add_swoosh(m.x + 0.5 * m.w, m.y + 0.5 * m.h)
+   del(moons, m)
+  end
+ end
 
-    -- if falling, check ground collision
-    if player.dy > 0 then
-        if btn(5) then set_state('floating') else set_state('falling') end
-        player.dy = clamp(player.dy, player.max_dy)
-        -- touch ground
-        while ((collides_with_map2(
-        player.x,
-        player.y + player.dy,
-        player.w,
-        player.h,
-        'down') & 1) != 0) do
-            -- fix state
-            if btn(0) or btn(1) then set_state('running') 
-            elseif abs(player.dx) >= 0.1 then set_state('sliding')
-            else set_state('idle') end
-            player.first_wall = true
-            player.float_meter = 10
-            player.prev_wall= "none"
-            player.db.c_d = true
-            player.dy -= 1
-            if player.dy < 0 then
-                player.dy = 0
-                break
-            end
-        end
-    elseif player.dy < 0 then
-        if btn(5) then set_state('jumping')
-        else set_state('floating') end    
-        while (collides_with_map2(
-        player.x,
-        player.y + player.dy,
-        player.w,
-        player.h,
-        'up') & 2) != 0 do
-            player.dy += 1
-            player.db.c_u=true
-            if player.dy > 0 then 
-                player.dy = 0
-                break
-            end
-        end
-    end
-    if (on_ground() and flr(player.y) % 8 != 0 and player.dy == 0) then 
-        player.y = flr(player.y) - (flr(player.y) % 8)
-    end
-    -- fan physics
-    for fan in all(fans) do 
-        if touch(player, fan.field) then
-            if btn(5) and player.float_meter > 0 then
-                set_state('floating')
-                player.dy -= fan.force
-            else 
-                player.dy -= fan.force / 2
-            end
-        end
-    end
+ -- if falling, check ground collision
+ if player.dy > 0 then
+  if btn(5) then set_state('floating') else set_state('falling') end
+  player.dy = clamp(player.dy, player.max_dy)
+  -- touch ground
+  while ((collides_with_map2(
+  player.x,
+  player.y + player.dy,
+  player.w,
+  player.h,
+  'down') & 1) != 0) do
+   -- fix state
+   if btn(0) or btn(1) then set_state('running') 
+   elseif abs(player.dx) >= 0.1 then set_state('sliding')
+   else set_state('idle') end
+   player.first_wall = true
+   player.float_meter = 10
+   player.prev_wall= "none"
+   player.db.c_d = true
+   player.dy -= 1
+   if player.dy < 0 then
+    player.dy = 0
+    break
+   end
+  end
+ elseif player.dy < 0 then
+  if btn(5) then set_state('jumping')
+  else set_state('floating') end 
+  while (collides_with_map2(
+  player.x,
+  player.y + player.dy,
+  player.w,
+  player.h,
+  'up') & 2) != 0 do
+   player.dy += 1
+   player.db.c_u=true
+   if player.dy > 0 then 
+    player.dy = 0
+    break
+   end
+  end
+ end
+ if (on_ground() and flr(player.y) % 8 != 0 and player.dy == 0) then 
+  player.y = flr(player.y) - (flr(player.y) % 8)
+ end
+ -- fan physics
+ for fan in all(fans) do 
+  if touch(player, fan.field) then
+   if btn(5) and player.float_meter > 0 then
+    set_state('floating')
+    player.dy -= fan.force
+   else 
+    player.dy -= fan.force / 2
+   end
+  end
+ end
 
-    --check collision on x
-    --moving left
-    if player.dx < 0 then
-        while (collides_with_map2(
-        player.x + player.dx,
-        player.y,
-        player.w,
-        player.h,
-        'left') & 2) != 0 do
-            player.dx += 1
-            if not on_ground() then set_state('onleft') end
-            player.db.c_l = true
-            if player.dx > 0 then 
-                player.dx = 0
-                break
-            end
-            --while flr(player.x) % 8 != 0 do
-            --    player.x += 1
-            --end
-        end
-        if adjacent_to_tile(player, 1) == 'l' and not on_ground() then
-            set_state('onleft')
-        else
-            player.on_wall = "none"
-            player.db.c_l = false
-        end
-    elseif player.dx > 0 then
-        while (collides_with_map2(
-        player.x + player.dx,
-        player.y,
-        player.w,
-        player.h,
-        'right') & 2) != 0 do
-            player.dx -= 1
-            if not on_ground() then set_state('onright') end
-            player.on_wall = "r"
-            player.db.c_r = true
-            if player.dx < 0 then 
-                player.dx = 0
-                break
-            end
-            --while flr(player.x) % 8 != 0 do
-            --    player.x -= 1
-            --end
-        end
-        if adjacent_to_tile(player, 1) == 'r' and not on_ground() then
-            set_state('onright')
-        else
-            player.on_wall = "none"
-            player.db.c_r = false
-        end
-    else
-        if not on_ground() then 
-            local dir = adjacent_to_tile(player, 1)
-            if dir == 'l' then
-                set_state('onleft')
-            elseif dir == 'r' then
-                set_state('onright')
-            else
-                player.db.c_u=false
-                player.db.c_d=false
-                player.db.c_l=false
-                player.db.c_r=false
-            end
-        end
-        
-    end
-    player.hurtbox.dx = player.dx
-    player.hurtbox.dy = player.dy
-    player.hurtbox.x = player.x + 2
-    player.hurtbox.y = player.y + 2
+ --check collision on x
+ --moving left
+ if player.dx < 0 then
+  while (collides_with_map2(
+  player.x + player.dx,
+  player.y,
+  player.w,
+  player.h,
+  'left') & 2) != 0 do
+   player.dx += 1
+   if not on_ground() then set_state('onleft') end
+   player.db.c_l = true
+   if player.dx > 0 then 
+    player.dx = 0
+    break
+   end
+   --while flr(player.x) % 8 != 0 do
+   -- player.x += 1
+   --end
+  end
+  if adjacent_to_tile(player, 1) == 'l' and not on_ground() then
+   set_state('onleft')
+  else
+   player.on_wall = "none"
+   player.db.c_l = false
+  end
+ elseif player.dx > 0 then
+  while (collides_with_map2(
+  player.x + player.dx,
+  player.y,
+  player.w,
+  player.h,
+  'right') & 2) != 0 do
+   player.dx -= 1
+   if not on_ground() then set_state('onright') end
+   player.on_wall = "r"
+   player.db.c_r = true
+   if player.dx < 0 then 
+    player.dx = 0
+    break
+   end
+   --while flr(player.x) % 8 != 0 do
+   -- player.x -= 1
+   --end
+  end
+  if adjacent_to_tile(player, 1) == 'r' and not on_ground() then
+   set_state('onright')
+  else
+   player.on_wall = "none"
+   player.db.c_r = false
+  end
+ else
+  if not on_ground() then 
+   local dir = adjacent_to_tile(player, 1)
+   if dir == 'l' then
+    set_state('onleft')
+   elseif dir == 'r' then
+    set_state('onright')
+   else
+    player.db.c_u=false
+    player.db.c_d=false
+    player.db.c_l=false
+    player.db.c_r=false
+   end
+  end
+  
+ end
+ player.hurtbox.dx = player.dx
+ player.hurtbox.dy = player.dy
+ player.hurtbox.x = player.x + 2
+ player.hurtbox.y = player.y + 2
 end
 
 function player_update()
-    player_physics_update()
-    -- controls
-    if controls_on then
-       player_controller_update()
-    end
-    if on_ground() and state_is('floating') then 
-        print('error: floating while on ground', cam.x, cam.y + 64, debug_color)
-    end
-    player_collider_update()
-    --stop sliding
-    if state_is('sliding') then
-        if abs(player.dx) < 0.2
-            or state_is('running') then
-            player.dx = 0
-            set_state('sliding')
-        end
-    end
-    --move
-    player.dx = clamp(player.dx, player.max_dx)
-    player.dy = clamp(player.dy, player.max_dy)
-    player.x += player.dx
-    player.y += player.dy
-    --limit to map
-    if player.x < map_start then
-        player.x = map_start
-    end
-    if player.x > map_end - player.w then
-        player.x = map_end - player.w
-    end
-    if not umbrella_collected then
-        player.float_meter = 0
-    end
+ player_physics_update()
+ -- controls
+ if controls_on then
+    player_controller_update()
+ end
+ if on_ground() and state_is('floating') then 
+  print('error: floating while on ground', cam.x, cam.y + 64, debug_color)
+ end
+ player_collider_update()
+ --stop sliding
+ if state_is('sliding') then
+  if abs(player.dx) < 0.2
+   or state_is('running') then
+   player.dx = 0
+   set_state('sliding')
+  end
+ end
+ --move
+ player.dx = clamp(player.dx, player.max_dx)
+ player.dy = clamp(player.dy, player.max_dy)
+ player.x += player.dx
+ player.y += player.dy
+ --limit to map
+ if player.x < map_start then
+  player.x = map_start
+ end
+ if player.x > map_end - player.w then
+  player.x = map_end - player.w
+ end
+ if not umbrella_collected then
+  player.float_meter = 0
+ end
 end
 
 function player_animate()
-    if state_is('onleft') or state_is('onright') then
-        player.current_sprite = 5
-        if state_is('onleft') then player.flp = true end
-        if state_is('onright') then player.flp = false end
-    elseif state_is('jumping') then
-        player.current_sprite = 6
-    elseif state_is('falling') or state_is('floating') then
-        player.current_sprite=8
-    elseif state_is('sliding') then
-        player.current_sprite=7
-    elseif state_is('running') then
-        if time() - player.anim > .1 then
-            player.anim = time()
-            player.current_sprite += 1
-            if player.current_sprite > 4 then
-                player.current_sprite = 3
-            end
-        end
-    elseif state_is('idle') then --player idle
-        if time()-player.anim > .3 then
-            player.anim=time()
-            player.current_sprite += 1
-            if player.current_sprite > 2 then
-                player.current_sprite = 1
-            end
-        end
-    end
+ if state_is('onleft') or state_is('onright') then
+  player.current_sprite = 5
+  if state_is('onleft') then player.flp = true end
+  if state_is('onright') then player.flp = false end
+ elseif state_is('jumping') then
+  player.current_sprite = 6
+ elseif state_is('falling') or state_is('floating') then
+  player.current_sprite=8
+ elseif state_is('sliding') then
+  player.current_sprite=7
+ elseif state_is('running') then
+  if time() - player.anim > .1 then
+   player.anim = time()
+   player.current_sprite += 1
+   if player.current_sprite > 4 then
+    player.current_sprite = 3
+   end
+  end
+ elseif state_is('idle') then --player idle
+  if time()-player.anim > .3 then
+   player.anim=time()
+   player.current_sprite += 1
+   if player.current_sprite > 2 then
+    player.current_sprite = 1
+   end
+  end
+ end
 end
 
 function on_ground()
-    if collides_with_map(player, 'down', 0) or state_is('landed') or state_is('running') or state_is('idle') or state_is('sliding') then 
-        return true 
-    end
-    return false
+ if collides_with_map(player, 'down', 0) or state_is('landed') or state_is('running') or state_is('idle') or state_is('sliding') then 
+  return true 
+ end
+ return false
 end
 
 function state_is(s)
-    return player.state == s
+ return player.state == s
 end
 
 function set_state(s)
-    player.state = s
+ player.state = s
 end
 
 function player_debug_draw()
-    print(player.state, player.x, player.y + player.h + 2, debug_color)
-    rect(player.x + 1, player.y + 1, player.x + 6, player.y + 4, 8)
-    
-    print('left = '..tostr(player.db.c_l), cam.x + 1, cam.y + 37, debug_color)
-    print('right = '..tostr(player.db.c_r), cam.x + 1, cam.y + 43, debug_color)
-    print('y=['..tostr(player.y)..']', cam.x + 1, cam.y + 49, debug_color)
+ print(player.state, player.x, player.y + player.h + 2, debug_color)
+ rect(player.x + 1, player.y + 1, player.x + 6, player.y + 4, 8)
+ 
+ print('left = '..tostr(player.db.c_l), cam.x + 1, cam.y + 37, debug_color)
+ print('right = '..tostr(player.db.c_r), cam.x + 1, cam.y + 43, debug_color)
+ print('y=['..tostr(player.y)..']', cam.x + 1, cam.y + 49, debug_color)
 end
 
 function player_die()
-    sfx(62, 3, 12, 4)
-    add_wipe(8)
-    num_deaths += 1
-    controls_on = false
-    pause_controls_start = time()
-    game.reset()
+ sfx(62, 3, 12, 4)
+ add_wipe(8)
+ num_deaths += 1
+ controls_on = false
+ pause_controls_start = time()
+ game.reset()
 end
 -->8
 --src/camera.lua
 function cam_init(spawn_x, spawn_y)
-    cam = {
-        x = spawn_x,
-        y = spawn_y,
-        target_x = 0,
-        target_y = 0,
-        look_ahead_distance = 20
-    }
+ cam = {
+  x = spawn_x,
+  y = spawn_y,
+  target_x = 0,
+  target_y = 0,
+  look_ahead_distance = 20
+ }
 end
 
 function cam_update()
-    -- TODO: why the fuck do i have this line?
-    cam.target_x = player.x - 64
-    -- put the camera target to the correct location
-    if player.flp then
-        cam.target_x -= cam.look_ahead_distance
-    else
-        cam.target_x += cam.look_ahead_distance
-    end
-    -- TODO: WHYYYYY FUCKING WHYYYYY
-    cam.target_y = player.y - 64
+ -- TODO: why the fuck do i have this line?
+ cam.target_x = player.x - 64
+ -- put the camera target to the correct location
+ if player.flp then
+  cam.target_x -= cam.look_ahead_distance
+ else
+  cam.target_x += cam.look_ahead_distance
+ end
+ -- TODO: WHYYYYY FUCKING WHYYYYY
+ cam.target_y = player.y - 64
 
-    -- TODO: just use a lerp
-    cam.x = (cam_speed * cam.x) + ((1 - cam_speed) * cam.target_x)
-    cam.y = (cam_speed * cam.y) + ((1 - cam_speed) * cam.target_y)
+ -- TODO: just use a lerp
+ cam.x = (cam_speed * cam.x) + ((1 - cam_speed) * cam.target_x)
+ cam.y = (cam_speed * cam.y) + ((1 - cam_speed) * cam.target_y)
 
-    -- camera bounds
-    if cam.x < map_start then
-        cam.x = map_start
-    end
-    if cam.x > map_end - 128 then
-        cam.x = map_end-128	
-    end
-    if cam.y < map_top then
-        cam.y = map_top
-    end
-    if cam.y > map_bottom - 128 then
-        cam.y = map_bottom - 128
-    end
+ -- camera bounds
+ if cam.x < map_start then
+  cam.x = map_start
+ end
+ if cam.x > map_end - 128 then
+  cam.x = map_end-128	
+ end
+ if cam.y < map_top then
+  cam.y = map_top
+ end
+ if cam.y > map_bottom - 128 then
+  cam.y = map_bottom - 128
+ end
 
-    -- assign camera to location
-    camera(cam.x, cam.y)
+ -- assign camera to location
+ camera(cam.x, cam.y)
 end
 
 -->8
@@ -666,64 +667,69 @@ end
 button_signal = {}
 
 function add_all_buttons() 
-    -- id's just increment for every button we add
-    -- 1, 2, 3, ...
-    --add_button(18, 62, 13, 59) -- 1
-    add_button(20, 59, 22, 56)
-    add_button(0, 62, 1, 61)
-    add_button(94, 62, 91, 59)
-    add_button(93, 62, 91, 59)
-    add_button(92, 62, 91, 59)
+ -- id's just increment for every button we add
+ -- 1, 2, 3, ...
+ --add_button(18, 62, 13, 59) -- 1
+ add_button(20, 59, 22, 56)
+ add_button(0, 62, 1, 61)
+ add_button(94, 62, 91, 59)
+ add_button(93, 62, 91, 59)
+ add_button(92, 62, 91, 59)
+ add_button(119, 35, 116, 34)
+ add_button(120, 35, 116, 34)
+ add_button(121, 35, 116, 34)
+ add_button(122, 35, 116, 34)
+ add_button(123, 35, 116, 34)
 end
 
 function add_button(x_tile, y_tile, x_target, y_target)
-    add(buttons, {
-        id = #buttons + 1,
-        x = x_tile * 8,
-        y = y_tile * 8,
-        w = 8,
-        h = 8,
-        acitve = false,
-        up_spr = 104,
-        down_spr = 123,
-        target_x = x_target,
-        target_y = y_target,
-        draw = function(self)
-            local x, y = self.x, self.y
-            if self.active then
-                spr(self.down_spr, x, y)
-            else
-                spr(self.up_spr, x, y)
-            end
-        end,
-        update = function(self)
-            local active = false
-            for ib in all(interactive_blocks) do 
-                if touch(self, ib) then
-                    active = true
-                    destroy_target(self.target_x, self.target_y)
-                end
-            end
-            self.active = active
-            button_signal[self.id] = self.active
-        end
-    })
+ add(buttons, {
+  id = #buttons + 1,
+  x = x_tile * 8,
+  y = y_tile * 8,
+  w = 8,
+  h = 8,
+  acitve = false,
+  up_spr = 104,
+  down_spr = 123,
+  target_x = x_target,
+  target_y = y_target,
+  draw = function(self)
+   local x, y = self.x, self.y
+   if self.active then
+    spr(self.down_spr, x, y)
+   else
+    spr(self.up_spr, x, y)
+   end
+  end,
+  update = function(self)
+   local active = false
+   for ib in all(interactive_blocks) do 
+    if touch(self, ib) then
+     active = true
+     destroy_target(self.target_x, self.target_y)
+    end
+   end
+   self.active = active
+   button_signal[self.id] = self.active
+  end
+ })
 end
 
 function destroy_target(x, y)
-    curr_block = mget(x, y)
-    if curr_block == 107 then 
-        mset(x, y, 0)
-        destroy_target(x - 1, y)
-        destroy_target(x + 1, y)
-        destroy_target(x, y - 1)
-        destroy_target(x, y + 1)
-        for i = 1, 10 do
-            dust_x = x * 8 + rnd(8)
-            dust_y = y * 8 + rnd(8)
-            add_dust(dust_x, dust_y, 0, 0)
-        end
-    end
+ curr_block = mget(x, y)
+ if curr_block == 107 then 
+  mset(x, y, 0)
+  destroy_target(x - 1, y)
+  destroy_target(x + 1, y)
+  destroy_target(x, y - 1)
+  destroy_target(x, y + 1)
+  for i = 1, 10 do
+   dust_x = x * 8 + rnd(8)
+   dust_y = y * 8 + rnd(8)
+   add_dust(dust_x, dust_y, 0, 0)
+  end
+ end
 end
 -->8
 --src/entities/dissolve_block.lua
@@ -731,267 +737,263 @@ end
 dissolve_respawn_duration = 360
 
 function init_dissolve_blocks()
-    --[[
-    add_dissolve_block(10,36)
-    add_dissolve_block(11,36)
-    add_dissolve_block(12,36)
-    ]]
-    for x_tile = 0,127 do
-        for y_tile = 0,63 do
-            if mget(x_tile, y_tile) == 54 then
-                add_dissolve_block(x_tile, y_tile)
-                mset(x_tile, y_tile, 0)
-            end
-        end
-    end
+ --[[
+ add_dissolve_block(10,36)
+ add_dissolve_block(11,36)
+ add_dissolve_block(12,36)
+ ]]
+ for x_tile = 0,127 do
+  for y_tile = 0,63 do
+   if mget(x_tile, y_tile) == 54 then
+    add_dissolve_block(x_tile, y_tile)
+    mset(x_tile, y_tile, 0)
+   end
+  end
+ end
 end
 
 function add_dissolve_block(x, y)
-    add(dissolve_blocks, {
-        x = x * 8,
-        y = y * 8,
-        x_tile = x,
-        y_tile = y,
-        w = 8,
-        h = 8,
-        hb = {
-            x = (x * 8) - 1,
-            y = (y * 8) - 1,
-            w = 10,
-            h = 2
-        },
-        durability = 3,
-        respawn_timer = 0,
-        touching_player = false,
-        update = function(self)
-            if not self.touching_player then 
-                if touch(self.hb, player) then
-                    self.touching_player = true
-                end
-            else
-                if not touch(self.hb, player) then
-                    self.touching_player = false
-                    self.durability -= 1
-                end
-            end
-            if not controls_on then
-                self.durability = 3
-            end
-            if self.durability > 2 then
-                mset(self.x_tile, self.y_tile, 54)
-            elseif self.durability > 1 then
-                mset(self.x_tile, self.y_tile, 32)
-            elseif self.durability > 0 then
-                mset(self.x_tile, self.y_tile, 17)
-            else
-                mset(self.x_tile, self.y_tile, 0)
-                if self.respawn_timer == 0 then
-                    for i=1,10 do
-                        local x=self.x+rnd(8)
-                        local y=self.y+rnd(8)
-                        add_dust(x,y,0,0)
-                    end
-                end
-                self.durability = 0
-                self.respawn_timer += 1
-                if self.respawn_timer >= dissolve_respawn_duration then
-                    self.respawn_timer = 0
-                    self.durability = 3
-                end
-            end
-        end,
-        draw = function(self)
-            --[[if touch(self.hb, player) then
-                if self.durability > 66 then
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 11)
-                end
-                if self.durability > 33 then
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 14)
-                else
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 8)
-                end
-            end]]
-        end
-    })
+ add(dissolve_blocks, {
+  x = x * 8,
+  y = y * 8,
+  x_tile = x,
+  y_tile = y,
+  w = 8,
+  h = 8,
+  hb = {
+   x = (x * 8) - 1,
+   y = (y * 8) - 1,
+   w = 10,
+   h = 2
+  },
+  durability = 3,
+  respawn_timer = 0,
+  touching_player = false,
+  update = function(self)
+   if not self.touching_player then 
+    if touch(self.hb, player) then
+     self.touching_player = true
+    end
+   else
+    if not touch(self.hb, player) then
+     self.touching_player = false
+     self.durability -= 1
+    end
+   end
+   if not controls_on then
+    self.durability = 3
+   end
+   if self.durability > 2 then
+    mset(self.x_tile, self.y_tile, 54)
+   elseif self.durability > 1 then
+    mset(self.x_tile, self.y_tile, 32)
+   elseif self.durability > 0 then
+    mset(self.x_tile, self.y_tile, 17)
+   else
+    mset(self.x_tile, self.y_tile, 0)
+    if self.respawn_timer == 0 then
+     for i=1,10 do
+      local x=self.x+rnd(8)
+      local y=self.y+rnd(8)
+      add_dust(x,y,0,0)
+     end
+    end
+    self.durability = 0
+    self.respawn_timer += 1
+    if self.respawn_timer >= dissolve_respawn_duration then
+     self.respawn_timer = 0
+     self.durability = 3
+    end
+   end
+  end,
+  draw = function(self)
+   --[[if touch(self.hb, player) then
+    if self.durability > 66 then
+     rect(self.x, self.y, self.x + self.w, self.y + self.h, 11)
+    end
+    if self.durability > 33 then
+     rect(self.x, self.y, self.x + self.w, self.y + self.h, 14)
+    else
+     rect(self.x, self.y, self.x + self.w, self.y + self.h, 8)
+    end
+   end]]
+  end
+ })
 end
 -->8
 --src/entities/fan.lua
 function add_all_fans()
-    for y = 50, 27, -8 do
-        add_fan(63, y, 0, 0.3)
-    end
-    --add_fan(0, 58, 0, 0.3)
-    --[[
-    add_fan(78, 17, 0, 0.3)
-    add_fan(78, 13, 0, 0.3)
-    add_fan(78, 9, 0, 0.3)
-    add_fan(84, 18, 0, 0.3)
-    add_fan(64, 19, 0, 0.3)
-    add_fan(69, 17, 0, 0.3)
-    add_fan(73, 17, 0, 0.3)
-    add_fan(57, 30, 0, 0.3)
-    add_fan(61, 30, 0, 0.3)
-    add_fan(68, 30, 0, 0.3)
-    add_fan(72, 29, 0, 0.3)
-    add_fan(72, 24, 0, 0.3)
-]]
+ for y = 50, 27, -8 do
+  add_fan(63, y, 0, 0.3)
+ end
+ add_fan(72, 29, 0, 0.3)
+ add_fan(83, 30, 0, 0.3)
+ add_fan(88, 29, 0, 0.3)
+ add_fan(98, 25, 0, 0.2)
+ add_fan(109, 33, 0, 0.3)
+ add_fan(116, 33, 0, 0.3)
+ add_fan(121, 32, 0, 0.3)
 end
 
 function add_fan(x, y, r, f)
-    add(
-        fans, {
-            x = x * 8,
-            y = y * 8,
-            force = f,
-            field = { x = x * 8, y = y * 8 - 32, w = 16, h = 32 },
-            rot = r % 4,
-            sprite_sheet = { 89, 90, 91, 75, 91, 90, 89 },
-            anim_idx = 0,
-            frame = 0,
-            draw = function(self)
-                --pset(cam.x+1,cam.y+1,7)
-                pal(6, 13)
-                pal(7, 6)
-                pal(13, 5)
-                local secondary_anim_idx = (self.anim_idx + 2) % 4
-                spr(self.sprite_sheet[self.anim_idx + 1], self.x, self.y)
-                --spr(self.sprite_sheet[secondary_anim_idx+1],self.x+8,self.y,1,1,true)
-                pal(6, 6)
-                pal(7, 7)
-                pal(13, 13)
-                spr(self.sprite_sheet[secondary_anim_idx + 1], self.x, self.y)
-                pal(6, 13)
-                pal(7, 6)
-                pal(13, 5)
-                spr(self.sprite_sheet[secondary_anim_idx + 1], self.x + 8, self.y, 1, 1, true)
-                pal(6, 6)
-                pal(7, 7)
-                pal(13, 13)
-                spr(self.sprite_sheet[self.anim_idx + 1], self.x + 8, self.y, 1, 1, true)
-                if debug_on then
-                    local f = self.field
-                    rect(f.x, f.y, f.x + f.w, f.y + f.h, debug_color)
-                end
-            end,
-            update = function(self)
-                self.frame += 1
-                if self.frame >= 6 then
-                    self.frame = 0
-                    self.anim_idx += 1
-                    self.anim_idx = self.anim_idx % #self.sprite_sheet
-                end
-                if rnd(100) < 20 then
-                    local x, y, dx, dy
-                    if self.rot == 0 then
-                        x = self.x + rnd(16)
-                        y = self.y - 2
-                        dx = 0
-                        dy = self.force
-                    elseif self.rot == 1 then
-                    elseif self.rot == 2 then
-                    elseif self.rot == 3 then
-                    else
-                        error('fan rotation invalid')
-                    end
+ add(
+  fans, {
+   x = x * 8,
+   y = y * 8,
+   force = f,
+   field = { x = x * 8, y = y * 8 - 32, w = 16, h = 32 },
+   rot = r % 4,
+   sprite_sheet = { 89, 90, 91, 75, 91, 90, 89 },
+   anim_idx = 0,
+   frame = 0,
+   draw = function(self)
+    --pset(cam.x+1,cam.y+1,7)
+    pal(6, 13)
+    pal(7, 6)
+    pal(13, 5)
+    local secondary_anim_idx = (self.anim_idx + 2) % 4
+    spr(self.sprite_sheet[self.anim_idx + 1], self.x, self.y)
+    --spr(self.sprite_sheet[secondary_anim_idx+1],self.x+8,self.y,1,1,true)
+    pal(6, 6)
+    pal(7, 7)
+    pal(13, 13)
+    spr(self.sprite_sheet[secondary_anim_idx + 1], self.x, self.y)
+    pal(6, 13)
+    pal(7, 6)
+    pal(13, 5)
+    spr(self.sprite_sheet[secondary_anim_idx + 1], self.x + 8, self.y, 1, 1, true)
+    pal(6, 6)
+    pal(7, 7)
+    pal(13, 13)
+    spr(self.sprite_sheet[self.anim_idx + 1], self.x + 8, self.y, 1, 1, true)
+    if debug_on then
+     local f = self.field
+     rect(f.x, f.y, f.x + f.w, f.y + f.h, debug_color)
+    end
+   end,
+   update = function(self)
+    self.frame += 1
+    if self.frame >= 6 then
+     self.frame = 0
+     self.anim_idx += 1
+     self.anim_idx = self.anim_idx % #self.sprite_sheet
+    end
+    if rnd(100) < 20 then
+     local x, y, dx, dy
+     if self.rot == 0 then
+      x = self.x + rnd(16)
+      y = self.y - 2
+      dx = 0
+      dy = self.force
+     elseif self.rot == 1 then
+     elseif self.rot == 2 then
+     elseif self.rot == 3 then
+     else
+      error('fan rotation invalid')
+     end
 
-                    add_dust(x, y, dx, dy)
-                end
-            end
-        }
-    )
+     add_dust(x, y, dx, dy)
+    end
+   end
+  }
+ )
 end
 -->8
 --src/entities/floating_spikes.lua
 function add_all_spikes()
-    add_floating_spike(two_point_path(44, 61, 53, 61), 2)
-    add_floating_spike(two_point_path(64, 62, 90, 62), 0.3)
-    add_floating_spike(two_point_path(35, 60, 35, 55), 1)
-    add_floating_spike(two_point_path(63, 56, 71, 56), 2)
-    add_floating_spike(two_point_path(74, 57, 89, 57), 2)
-    local phase = 0
-    for x = 75, 91 do
-        add_floating_spike(two_point_path(x, 54, x, 52), .8, phase)
+ add_floating_spike(two_point_path(44, 61, 53, 61), 2)
+ add_floating_spike(two_point_path(64, 62, 90, 62), 0.3)
+ add_floating_spike(two_point_path(35, 60, 35, 55), 1)
+ add_floating_spike(two_point_path(63, 56, 71, 56), 2)
+ add_floating_spike(two_point_path(74, 57, 89, 57), 2)
+ local phase = 0
+ for x = 75, 91 do
+  add_floating_spike(two_point_path(x, 54, x, 52), .8, phase)
 	phase += 0.09
-    end
+ end
+ add_floating_spike(two_point_path(66, 26, 66, 20), 2)
+ add_floating_spike(two_point_path(86, 29, 86, 25), 2)
+ add_floating_spike(two_point_path(96, 23, 108, 23), 2)
+ add_floating_spike(two_point_path(98, 21, 98, 29), 2)
 end
 
 function two_point_path(x1, y1, x2, y2)
-    return {{x = x1 * 8, y = y1 * 8}, {x = x2 * 8, y = y2 * 8}}
+ return {{x = x1 * 8, y = y1 * 8}, {x = x2 * 8, y = y2 * 8}}
 end
 
 function four_point_path(x1, y1, x2, y2)
-    return {
-        {x = x1 * 8, y = y1 * 8},
-        {x = x1 * 8, y = y2 * 8},
-        {x = x2 * 8, y = y2 * 8},
-        {x = x2 * 8, y = y1 * 8}
-    }
+ return {
+  {x = x1 * 8, y = y1 * 8},
+  {x = x1 * 8, y = y2 * 8},
+  {x = x2 * 8, y = y2 * 8},
+  {x = x2 * 8, y = y1 * 8}
+ }
 end
 
 function n_point_path(n, x_array, y_array)
-    path = {}
-    for i = 1, n do 
-        path[i].x = x_array[i] * 8
-        path[i].y = y_array[i] * 8
-    end
-    return path
+ path = {}
+ for i = 1, n do 
+  path[i].x = x_array[i] * 8
+  path[i].y = y_array[i] * 8
+ end
+ return path
 end
 
 function add_floating_spike(path, speed, phase)
-    local x_positions = {}
-    local y_positions = {}
-    for point in all(path) do 
-        add(x_positions, point.x)
-        add(y_positions, point.y)
+ local x_positions = {}
+ local y_positions = {}
+ for point in all(path) do 
+  add(x_positions, point.x)
+  add(y_positions, point.y)
+ end
+ add(floating_spikes, {
+  x_path = x_positions,
+  y_path = y_positions,
+  x = x_positions[1],
+  y = y_positions[1],
+  w = 8,
+  h = 8,
+  path_length = #x_positions,
+  speed = speed,
+  t = phase or 0,  -- Parameter for interpolation (0 to 1)
+  current_point_index = 1,
+  frame = 1,  -- Current frame of animation
+  frame_duration = .05,  -- Time between frame changes
+  frame_timer = 0,  -- Timer for frame changes
+  sprite_sheet = {105, 106, 121, 122},  -- Your sprite sheet image
+  num_frames = 4,  -- Total number of frames in animation
+  update = function(self, dt)
+   local dt = 1/60
+   self.t = self.t + self.speed * dt / self.path_length
+   -- If self.t exceeds 1, wrap around and adjust it
+   if self.t >= 1 then
+    self.current_point_index = self.current_point_index + 1
+    if self.current_point_index > self.path_length then
+     self.current_point_index = 1 -- Wrap around to the beginning
     end
-    add(floating_spikes, {
-        x_path = x_positions,
-        y_path = y_positions,
-        x = x_positions[1],
-        y = y_positions[1],
-        w = 8,
-        h = 8,
-        path_length = #x_positions,
-        speed = speed,
-        t = phase or 0,  -- Parameter for interpolation (0 to 1)
-        current_point_index = 1,
-        frame = 1,  -- Current frame of animation
-        frame_duration = .05,  -- Time between frame changes
-        frame_timer = 0,  -- Timer for frame changes
-        sprite_sheet = {105, 106, 121, 122},  -- Your sprite sheet image
-        num_frames = 4,  -- Total number of frames in animation
-        update = function(self, dt)
-            local dt = 1/60
-            self.t = self.t + self.speed * dt / self.path_length
-            -- If self.t exceeds 1, wrap around and adjust it
-            if self.t >= 1 then
-                self.current_point_index = self.current_point_index + 1
-                if self.current_point_index > self.path_length then
-                    self.current_point_index = 1 -- Wrap around to the beginning
-                end
 		while self.t >= 1 do
 			self.t -= 1
 		end
-            end
-            
-            -- Interpolate between the current and next point
-            self.x = lerp(self.x_path[self.current_point_index], self.x_path[(self.current_point_index % self.path_length) + 1], self.t)
-            self.y = lerp(self.y_path[self.current_point_index], self.y_path[(self.current_point_index % self.path_length) + 1], self.t)
-            
-            -- Update animation frame
-            self.frame_timer = self.frame_timer + dt
-            if self.frame_timer >= self.frame_duration then
-                self.frame_timer = self.frame_timer - self.frame_duration
-                self.frame = (self.frame % self.num_frames) + 1
-            end
-        end,
-        draw = function(self)
-            -- Draw the current frame of the object's animation
-            spr(self.sprite_sheet[self.frame], self.x, self.y)
-        end
-    })
+   end
+   
+   -- Interpolate between the current and next point
+   self.x = lerp(self.x_path[self.current_point_index], self.x_path[(self.current_point_index % self.path_length) + 1], self.t)
+   self.y = lerp(self.y_path[self.current_point_index], self.y_path[(self.current_point_index % self.path_length) + 1], self.t)
+   
+   -- Update animation frame
+   self.frame_timer = self.frame_timer + dt
+   if self.frame_timer >= self.frame_duration then
+    self.frame_timer = self.frame_timer - self.frame_duration
+    self.frame = (self.frame % self.num_frames) + 1
+   end
+  end,
+  draw = function(self)
+   -- Draw the current frame of the object's animation
+   spr(self.sprite_sheet[self.frame], self.x, self.y)
+  end
+ })
 end
-    
+ 
 -->8
 --src/entities/interactive_block.lua
 interactive_blocks = {}
@@ -1006,103 +1008,103 @@ block_launch_force = 2
 block_respawn_duration = 180 
 
 function add_interactive_block(type, x, y)
-    add(interactive_blocks, {
-        type = 'block',
-        spawn_x = x,
-        spawn_y = y,
-        x = x,
-        y = y,
-        dx = 0,
-        dy = 0,
-        w = 7,
-        h = 7,
-        max_dx = 10,
-        max_dy = 10,
-        is_held = false,
-        is_hovered = false,
-        is_dead = false,
-        respawn_timer = 0,
-        hb = {
-            x1 = 0,
-            x2 = 7,
-            y1 = 0,
-            y2 = 7
-        },
-        hover_height = 0,
-        update = function(self)
-            if not self.is_dead then
-                if self.is_held then
-                    self.is_hovered = false
-                    if player.flp then
-                        self.x = player.x - grab_x_offset
-                    else
-                        self.x = player.x + grab_x_offset
-                    end
-                    self.y = player.y - 2
+ add(interactive_blocks, {
+  type = 'block',
+  spawn_x = x,
+  spawn_y = y,
+  x = x,
+  y = y,
+  dx = 0,
+  dy = 0,
+  w = 7,
+  h = 7,
+  max_dx = 10,
+  max_dy = 10,
+  is_held = false,
+  is_hovered = false,
+  is_dead = false,
+  respawn_timer = 0,
+  hb = {
+   x1 = 0,
+   x2 = 7,
+   y1 = 0,
+   y2 = 7
+  },
+  hover_height = 0,
+  update = function(self)
+   if not self.is_dead then
+    if self.is_held then
+     self.is_hovered = false
+     if player.flp then
+      self.x = player.x - grab_x_offset
+     else
+      self.x = player.x + grab_x_offset
+     end
+     self.y = player.y - 2
 
-                    -- throw block
-                    if btnp(4) then
-                        local sign = 1
-                        if player.flp then
-                            sign = -1
-                        end
-                        self.dx = sign * 2
-                        self.dy = -1
-                        self.is_held = false
-                    end
-                else
-                    for fan in all(fans) do 
-                        if touch(self, fan.field) then 
-                            self.dy -= fan.force
-                        end
-                    end
-                    move(self)
-                    hover_key.update(self)
-                end
-                for l in all(lasers) do
-                    if touch(l, self) then
-                        ib_die(self)
-                    end
-                end
-                if is_off_screen(self) then
-                    ib_die(self)
-                end
-            else
-                self.respawn_timer += 1
-                if self.respawn_timer > block_respawn_duration then
-                    ib_rspwn(self)
-                end
-            end
-        end,
-        draw = function(self)
-            if not self.is_dead then
-                spr(16, self.x, self.y)
-                if self.is_hovered then
-                    hover_key.draw(self)
-                end
-            end
-        end,
-    })
+     -- throw block
+     if btnp(4) then
+      local sign = 1
+      if player.flp then
+       sign = -1
+      end
+      self.dx = sign * 2
+      self.dy = -1
+      self.is_held = false
+     end
+    else
+     for fan in all(fans) do 
+      if touch(self, fan.field) then 
+       self.dy -= fan.force
+      end
+     end
+     move(self)
+     hover_key.update(self)
+    end
+    for l in all(lasers) do
+     if touch(l, self) then
+      ib_die(self)
+     end
+    end
+    if is_off_screen(self) then
+     ib_die(self)
+    end
+   else
+    self.respawn_timer += 1
+    if self.respawn_timer > block_respawn_duration then
+     ib_rspwn(self)
+    end
+   end
+  end,
+  draw = function(self)
+   if not self.is_dead then
+    spr(16, self.x, self.y)
+    if self.is_hovered then
+     hover_key.draw(self)
+    end
+   end
+  end,
+ })
 end
 
 function ib_rspwn(blck)
-    local _ENV = blck
-    x = spawn_x
-    y = spawn_y
-    dx = 0
-    dy = 0
-    respawn_timer = 0
-    is_dead = false
-    is_held = false
-    is_hovered = false
+ local _ENV = blck
+ x = spawn_x
+ y = spawn_y
+ dx = 0
+ dy = 0
+ respawn_timer = 0
+ is_dead = false
+ is_held = false
+ is_hovered = false
 end
 
 function ib_die(blck)
-    blck.respawn_timer = 0
-    blck.is_dead = true
-    for i = 1,10 do
-        add_dust(blck.x + rnd(8), blck.y + rnd(8), 0, 0)
-    end
+ blck.respawn_timer = 0
+ blck.is_dead = true
+ for i = 1,10 do
+  add_dust(blck.x + rnd(8), blck.y + rnd(8), 0, 0)
+ end
 end
 -->8
 --src/entities/laser.lua
@@ -1115,60 +1117,60 @@ laser_animation_speed = 2
 -- function to go through map and
 -- spawn all lasers
 function add_all_lasers()
-    for x_tile = 0, 127 do
-        for y_tile = 0, 63 do 
-            if mget(x_tile, y_tile) == 59 then 
-                add_laser(x_tile * 8, y_tile * 8, y_tile * 8)
-                mset(x_tile, y_tile, 0)
-            end
-        end
-    end
+ for x_tile = 0, 127 do
+  for y_tile = 0, 63 do 
+   if mget(x_tile, y_tile) == 59 then 
+    add_laser(x_tile * 8, y_tile * 8, y_tile * 8)
+    mset(x_tile, y_tile, 0)
+   end
+  end
+ end
 end
 
 -- function to instantiate a laser
 function add_laser(x, y)
-    add(lasers, {
-        x = x,
-        y = y,
-        w = 8,
-        h = 8,
-        t = 0,
-        y_offset = 0,
-        is_top = true,
-        is_bottom = true,
-        update = function(self)
-            self.t += 1
-            if self.t > laser_animation_speed then
-                self.y_offset = (self.y_offset + 1) % 8
-                self.t = 0
-            end
-            for l in all(lasers) do
-                if l.y == self.y - 8 then 
-                    self.is_top = false
-                elseif l.y == self.y + 8 then
-                    self.is_bottom = false
-                end
-            end
-        end,
-        draw = function(self)
-            spr(59, self.x, self.y + self.y_offset)
-            spr(59, self.x, self.y + self.y_offset - 8)
-            if self.is_top then
-                local r = rnd(2)
-                local x, y = self.x + 3.5, self.y - 1
-                circfill(x, y, r + 2, 8)
-                circfill(x, y, r + 1, 14)
-                circfill(x, y, r + 0, 7)
-            end
-            if self.is_bottom then
-                local r = rnd(2)
-                local x, y = self.x + 3.5, self.y + 8
-                circfill(x, y, r + 2, 8)
-                circfill(x, y, r + 1, 14)
-                circfill(x, y, r + 0, 7)
-            end
-        end
-    })
+ add(lasers, {
+  x = x,
+  y = y,
+  w = 8,
+  h = 8,
+  t = 0,
+  y_offset = 0,
+  is_top = true,
+  is_bottom = true,
+  update = function(self)
+   self.t += 1
+   if self.t > laser_animation_speed then
+    self.y_offset = (self.y_offset + 1) % 8
+    self.t = 0
+   end
+   for l in all(lasers) do
+    if l.y == self.y - 8 then 
+     self.is_top = false
+    elseif l.y == self.y + 8 then
+     self.is_bottom = false
+    end
+   end
+  end,
+  draw = function(self)
+   spr(59, self.x, self.y + self.y_offset)
+   spr(59, self.x, self.y + self.y_offset - 8)
+   if self.is_top then
+    local r = rnd(2)
+    local x, y = self.x + 3.5, self.y - 1
+    circfill(x, y, r + 2, 8)
+    circfill(x, y, r + 1, 14)
+    circfill(x, y, r + 0, 7)
+   end
+   if self.is_bottom then
+    local r = rnd(2)
+    local x, y = self.x + 3.5, self.y + 8
+    circfill(x, y, r + 2, 8)
+    circfill(x, y, r + 1, 14)
+    circfill(x, y, r + 0, 7)
+   end
+  end
+ })
 end
 -->8
 --src/entities/signpost.lua
@@ -1177,883 +1179,885 @@ max_sign_width = 100
 --moon_collection_sign = {''}
 
 function init_signs()
-    --add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 3, 60)
-    --add_sign('hold ❎ to float', 12, 36)
-    --add_sign('there are still 100 moons to collect!', 8, 62, true)
-    --add_sign('hold ❎ : jump->float', 33, 59)
-    --add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 19, 59)
-    --add_sign('flags save ur progress!', 53, 58)
-    --add_sign('u can wall jump!\nswitch sides to go higher', 60, 60)
-    add_sign('here the rain never stops\n...\nnor does the sun rise...', 7, 37)
-    add_sign('thick fog... biting cold.\nthe wind howls and howls\ncan you hear it?', 19, 34)
-    add_sign('these floating moons\nthey shine brightly.\nthey call to you.', 29, 31)
-    add_sign('you feel an urge\n\nan insatiable desire\n\nto collect all the moons.', 54, 37)
+ --add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 3, 60)
+ --add_sign('hold ❎ to float', 12, 36)
+ --add_sign('there are still 100 moons to collect!', 8, 62, true)
+ --add_sign('hold ❎ : jump->float', 33, 59)
+ --add_sign('controls:\n -⬅️➡️ to move\n -❎ to jump or float\n -🅾️ to interact', 19, 59)
+ --add_sign('flags save ur progress!', 53, 58)
+ --add_sign('u can wall jump!\nswitch sides to go higher', 60, 60)
+ add_sign('here the rain never stops\n...\nnor does the sun rise...', 7, 37)
+ add_sign('thick fog... biting cold.\nthe wind howls and howls\ncan you hear it?', 19, 34)
+ add_sign('these floating moons\nthey shine brightly.\nthey call to you.', 29, 31)
+ add_sign('you feel an urge\n\nan insatiable desire\n\nto collect all the moons.', 54, 37)
 end
 
 function add_sign(message, x_tile, y_tile, is_moon_counter)
-    add(signs, {
-        x = x_tile * 8,
-        y = y_tile * 8,
-        w = 8,
-        h = 8,
-        sprite = 103,
-        is_hovered = false,
-        is_active = false,
-        text = message,
-        hover_height = 0,
-        text_index = 1,
-        b = is_moon_counter or false,
-        draw = function(self)
-            if self.is_hovered and not self.is_active then 
-                print('🅾️', self.x, self.y - self.hover_height, 13)
-                --[[
-                for i = 0, 15 do 
-                    pal(i, 7)
-                end
-                spr(self.sprite, self.x + 1, self.y + 1)
-                spr(self.sprite, self.x - 1, self.y + 1)
-                spr(self.sprite, self.x + 1, self.y - 1)
-                spr(self.sprite, self.x - 1, self.y - 1)
-                for i = 0, 15 do 
-                    pal(i, i)
-                end
-                spr(self.sprite, self.x, self.y)
-                ]]--
-            end
-            if self.is_active then
-                local substring = sub(self.text, 0, flr(self.text_index))
-                draw_rounded_textbox(self.x / 8, self.y / 8, substring)
-            end
-        end,
-        update = function(self)
-            if self.b then
-                self.text = 'there are still ' .. tostr(100 - num_moons_collected) .. ' moons to collect!'
-            end
-            self.is_hovered = touch(player, self)
-            if self.is_hovered then
-                self.hover_height = lerp(self.hover_height, 8, 0.5)
-                if btnp(4) then
-                    self.is_active = not self.is_active
-                end 
-            else
-                self.hover_height = 0
-                self.is_active = false
-            end
-            if self.is_active then
-                self.text_index += 0.5
-            end
-        end
-    })
+ add(signs, {
+  x = x_tile * 8,
+  y = y_tile * 8,
+  w = 8,
+  h = 8,
+  sprite = 103,
+  is_hovered = false,
+  is_active = false,
+  text = message,
+  hover_height = 0,
+  text_index = 1,
+  b = is_moon_counter or false,
+  draw = function(self)
+   if self.is_hovered and not self.is_active then 
+    print('🅾️', self.x, self.y - self.hover_height, 13)
+    --[[
+    for i = 0, 15 do 
+     pal(i, 7)
+    end
+    spr(self.sprite, self.x + 1, self.y + 1)
+    spr(self.sprite, self.x - 1, self.y + 1)
+    spr(self.sprite, self.x + 1, self.y - 1)
+    spr(self.sprite, self.x - 1, self.y - 1)
+    for i = 0, 15 do 
+     pal(i, i)
+    end
+    spr(self.sprite, self.x, self.y)
+    ]]--
+   end
+   if self.is_active then
+    local substring = sub(self.text, 0, flr(self.text_index))
+    draw_rounded_textbox(self.x / 8, self.y / 8, substring)
+   end
+  end,
+  update = function(self)
+   if self.b then
+    self.text = 'there are still ' .. tostr(100 - num_moons_collected) .. ' moons to collect!'
+   end
+   self.is_hovered = touch(player, self)
+   if self.is_hovered then
+    self.hover_height = lerp(self.hover_height, 8, 0.5)
+    if btnp(4) then
+     self.is_active = not self.is_active
+    end 
+   else
+    self.hover_height = 0
+    self.is_active = false
+   end
+   if self.is_active then
+    self.text_index += 0.5
+   end
+  end
+ })
 end
 
 -->8
 --src/graphics/bg.lua
 function add_circ()
-    add(bg_graphics,{
-        x = rnd(128),
-        y = rnd(128),
-        dx = (rnd(2) + 1) / 3,
-        dy = (-rnd()) / 10,
-        r = rnd(54),
-        draw = function(self)
-            fillp(-23131)
-            circfill(cam.x + self.x, cam.y + self.y, self.r, 10)
-            fillp()
-            --circfill(cam.x + self.x, cam.y + self.y, self.r * 0.8, 10)
-        end,
-        update = function(self)
-            self.x += self.dx 
-            self.y += self.dy
-            if self.x > 128 + self.r then
-                self.x = -self.r
-            end
-            if self.y < 0 - self.r then 
-                self.y = 128 + self.r 
-            end
-        end
-    })
+ add(bg_graphics,{
+  x = rnd(128),
+  y = rnd(128),
+  dx = (rnd(2) + 1) / 3,
+  dy = (-rnd()) / 10,
+  r = rnd(54),
+  draw = function(self)
+   fillp(-23131)
+   circfill(cam.x + self.x, cam.y + self.y, self.r, 10)
+   fillp()
+   --circfill(cam.x + self.x, cam.y + self.y, self.r * 0.8, 10)
+  end,
+  update = function(self)
+   self.x += self.dx 
+   self.y += self.dy
+   if self.x > 128 + self.r then
+    self.x = -self.r
+   end
+   if self.y < 0 - self.r then 
+    self.y = 128 + self.r 
+   end
+  end
+ })
 end-->8
 --src/graphics/fx.lua
 function add_dust(_x,_y,_dx,_dy)
-    add(graphics,{
-        x=_x,
-        y=_y,
-        dx=_dx,
-        dy=_dy,
-        r=rnd(3),
-        draw=function(self)
-            circfill(self.x,self.y,self.r,13)
-        end,
-        update=function(self)
-            self.r -= 0.05
-            if self.r < 0 then
-                del(graphics, self)
-            end
-            if self.dy > -0.75 then
-                self.dy= (self.dy - 0.75) / 2
-            end
-            if self.dx < -0.05 then
-                self.dx += 0.05
-            elseif self.dx > 0.05 then
-                self.dx -= 0.05
-            else
-                self.dx=0
-            end
-            self.x += self.dx
-            self.y += self.dy
-        end
-    })
+ add(graphics,{
+  x=_x,
+  y=_y,
+  dx=_dx,
+  dy=_dy,
+  r=rnd(3),
+  draw=function(self)
+   circfill(self.x,self.y,self.r,13)
+  end,
+  update=function(self)
+   self.r -= 0.05
+   if self.r < 0 then
+    del(graphics, self)
+   end
+   if self.dy > -0.75 then
+    self.dy= (self.dy - 0.75) / 2
+   end
+   if self.dx < -0.05 then
+    self.dx += 0.05
+   elseif self.dx > 0.05 then
+    self.dx -= 0.05
+   else
+    self.dx=0
+   end
+   self.x += self.dx
+   self.y += self.dy
+  end
+ })
 end
 
 function add_wipe(color, speed)
-    add(graphics,{
-        a = 0,
-        b = 0,
-        draw=function(self)
-            local a = self.a
-            local b = self.b
-            local x = cam.x + 63
-            local y = cam.y + 63
-            for i = a, b do
-                --fillp(-32736)
-                rect(x - i, y - i, x + i, y + i, 8)
-                --fillp()
-            end
-        end,
-        update=function(self)
-            self.b += 5
-            if self.b >= 64 then
-                self.a += 5
-            end
-            if self.a > 128 then
-                del(graphics, self)
-            end
-        end
-    })
+ add(graphics,{
+  a = 0,
+  b = 0,
+  draw=function(self)
+   local a = self.a
+   local b = self.b
+   local x = cam.x + 63
+   local y = cam.y + 63
+   for i = a, b do
+    --fillp(-32736)
+    rect(x - i, y - i, x + i, y + i, 8)
+    --fillp()
+   end
+  end,
+  update=function(self)
+   self.b += 5
+   if self.b >= 64 then
+    self.a += 5
+   end
+   if self.a > 128 then
+    del(graphics, self)
+   end
+  end
+ })
 end
 
 function add_swoosh(_x,_y)
-    add(graphics,{
-        x=_x,
-        y=_y,
-        t=0,
-        r=10,
-        phi=4,
-        thta=0,
-        speed = 0.05,
-        draw=function(self)
-            for i=1,10 do
-                local theta=(0.03*i)+self.thta
-                local phi=(0.1*i)*self.phi
-                local r=self.t
-                circfill(self.x+r*cos(theta),self.y+r*sin(theta),phi,7)
-            end
-        end,
-        update=function(self)
-            self.t += 1
-            self.thta = (self.speed * (self.t))
-            if self.phi < 0 then
-                del(graphics, self)
-            end
-            self.phi -= self.speed
-        end
-    })
+ add(graphics,{
+  x=_x,
+  y=_y,
+  t=0,
+  r=10,
+  phi=4,
+  thta=0,
+  speed = 0.05,
+  draw=function(self)
+   for i=1,10 do
+    local theta=(0.03*i)+self.thta
+    local phi=(0.1*i)*self.phi
+    local r=self.t
+    circfill(self.x+r*cos(theta),self.y+r*sin(theta),phi,7)
+   end
+  end,
+  update=function(self)
+   self.t += 1
+   self.thta = (self.speed * (self.t))
+   if self.phi < 0 then
+    del(graphics, self)
+   end
+   self.phi -= self.speed
+  end
+ })
 end
 
 function add_rain()
-    add(rain,{
-        x = flr(rnd(128)),
-        y = flr(rnd(128)),
-        l = flr(rnd(7)),
-        s = (flr(rnd(3)) + 3) * 0.75,
-        draw = function(self)
-            for i = 1, self.l do
-                local colr=0
-                if i < 0.2 * self.l then
-                    colr = 0
-                elseif i < 0.7 * self.l then
-                    colr = 13
-                else
-                    colr=1
-                end
-                pset(self.x+cam.x+i,self.y+cam.y-i,colr) 
-            end
-        end,
-        update=function(self)
-            -- move rain drop
-            self.x -= self.s
-            self.y += self.s
-            -- loop rain drop
-            if self.x<-4 then
-                self.x+=132
-            end
-            if self.y > 132 then
-                self.y -= 132
-            end
-        end
-    })
+ add(rain,{
+  x = flr(rnd(128)),
+  y = flr(rnd(128)),
+  l = flr(rnd(7)),
+  s = (flr(rnd(3)) + 3) * 0.75,
+  draw = function(self)
+   for i = 1, self.l do
+    local colr=0
+    if i < 0.2 * self.l then
+     colr = 0
+    elseif i < 0.7 * self.l then
+     colr = 13
+    else
+     colr=1
+    end
+    pset(self.x+cam.x+i,self.y+cam.y-i,colr) 
+   end
+  end,
+  update=function(self)
+   -- move rain drop
+   self.x -= self.s
+   self.y += self.s
+   -- loop rain drop
+   if self.x<-4 then
+    self.x+=132
+   end
+   if self.y > 132 then
+    self.y -= 132
+   end
+  end
+ })
 end
 
 function add_splashes_at_random(rain_percent)
-    -- for any map tile within [cam.x, cam.x + 128] x [cam.y, cam.y + 128] with flag 0=TRUE
-    -- give a 'rain_percent'% chance it will add a splash at that tile
-    local x = flr(cam.x / 8)
-    local y = flr(cam.y / 8)
-    for x_tile = x, x + 16 do
-        for y_tile = y, y + 16 do
-            -- Check if flag 0 is TRUE (you may need to modify this part)
-            if fget(mget(x_tile, y_tile), 0) then
-                -- Calculate a random number between 0 and 99 (inclusive)
-                local random_chance = flr(rnd(100))
-                -- Check if the random chance is less than rain_percent
-                if random_chance < rain_percent then
-                    add_splash(x_tile, y_tile)
-                end
-            end
-        end
+ -- for any map tile within [cam.x, cam.x + 128] x [cam.y, cam.y + 128] with flag 0=TRUE
+ -- give a 'rain_percent'% chance it will add a splash at that tile
+ local x = flr(cam.x / 8)
+ local y = flr(cam.y / 8)
+ for x_tile = x, x + 16 do
+  for y_tile = y, y + 16 do
+   -- Check if flag 0 is TRUE (you may need to modify this part)
+   if fget(mget(x_tile, y_tile), 0) then
+    -- Calculate a random number between 0 and 99 (inclusive)
+    local random_chance = flr(rnd(100))
+    -- Check if the random chance is less than rain_percent
+    if random_chance < rain_percent then
+     add_splash(x_tile, y_tile)
     end
+   end
+  end
+ end
 end
 
 function add_splash(x_tile, y_tile)
-    add(splashes, {
-        ground = 8 * y_tile,
-        x = 8 * x_tile + flr(rnd(8)),
-        y = 8 * y_tile,
-        dy = -flr(rnd(10)) / 10,
-        dx = -flr(rnd(10)) / 50,
-        t = 0,
-        draw = function(self)
-            pset(self.x, self.y, 7)
-            pset(self.x + self.dx, self.y + self.dy, 13)
-        end,
-        update = function(self)
-            self.t += 1
-            if self.t >= 360 then
-                del(splashes, self)
-            end
-            self.dy += 0.1
-            self.x += self.dx
-            self.y += self.dy
-            if self.y > self.ground then
-                del(splashes, self)
-            end
-        end
-    })
+ add(splashes, {
+  ground = 8 * y_tile,
+  x = 8 * x_tile + flr(rnd(8)),
+  y = 8 * y_tile,
+  dy = -flr(rnd(10)) / 10,
+  dx = -flr(rnd(10)) / 50,
+  t = 0,
+  draw = function(self)
+   pset(self.x, self.y, 7)
+   pset(self.x + self.dx, self.y + self.dy, 13)
+  end,
+  update = function(self)
+   self.t += 1
+   if self.t >= 360 then
+    del(splashes, self)
+   end
+   self.dy += 0.1
+   self.x += self.dx
+   self.y += self.dy
+   if self.y > self.ground then
+    del(splashes, self)
+   end
+  end
+ })
 end-->8
 --src/graphics/ui.lua
 function draw_moon_counter(number)
-    sspr(8, 16, 24, 8, cam.x + 128 - 17 - 8, cam.y + 1)
-    print(tostr(number), cam.x + 128 - 7 - 8, cam.y + 2, 7)
+ sspr(8, 16, 24, 8, cam.x + 128 - 17 - 8, cam.y + 1)
+ print(tostr(number), cam.x + 128 - 7 - 8, cam.y + 2, 7)
 end
 
 function draw_death_counter(number)
-    sspr(32, 16, 24, 8, cam.x + 128 - 17 - 8, cam.y + 10)
-    print(tostr(number), cam.x + 128 - 6 - 8, cam.y + 11, 7)
+ sspr(32, 16, 24, 8, cam.x + 128 - 17 - 8, cam.y + 10)
+ print(tostr(number), cam.x + 128 - 6 - 8, cam.y + 11, 7)
 end
 
 function draw_rounded_rectangle(x, y, width, height, radius, color)
-    rectfill(x + radius, y, x + width - radius - 1, y + height - 1, color)
-    rectfill(x, y + radius, x + width - 1, y + height - radius, color)
-    circfill(x + radius, y + radius, radius, color)
-    circfill(x + width - radius - 1, y + radius, radius, color)
-    circfill(x + radius, y + height - radius - 1, radius, color)
-    circfill(x + width - radius - 1, y + height - radius - 1, radius, color)
+ rectfill(x + radius, y, x + width - radius - 1, y + height - 1, color)
+ rectfill(x, y + radius, x + width - 1, y + height - radius, color)
+ circfill(x + radius, y + radius, radius, color)
+ circfill(x + width - radius - 1, y + radius, radius, color)
+ circfill(x + radius, y + height - radius - 1, radius, color)
+ circfill(x + width - radius - 1, y + height - radius - 1, radius, color)
 end
 
 function draw_rounded_textbox(x_tile, y_tile, text)
-    local max_width = 100
-    local radius = 2
-    local padding = 2
-    local text_color = 7 -- Change this to your desired text color
-    local background_color = 13 -- Change this to your desired background color
+ local max_width = 100
+ local radius = 2
+ local padding = 2
+ local text_color = 7 -- Change this to your desired text color
+ local background_color = 13 -- Change this to your desired background color
 
-    -- Calculate the width of the text box based on the text length and the maximum width
-    local text_width = min(max_width, #text * 4 + 2 * padding)
-    local width = text_width + 2 * radius
+ -- Calculate the width of the text box based on the text length and the maximum width
+ local text_width = min(max_width, #text * 4 + 2 * padding)
+ local width = text_width + 2 * radius
 
-    -- Split the text into lines based on the width
-    local lines = split_text(text, text_width)
+ -- Split the text into lines based on the width
+ local lines = split_text(text, text_width)
 
-    -- Calculate the height based on the number of lines
-    local line_height = 8
-    local height = (#lines * line_height) + (2 * padding)
+ -- Calculate the height based on the number of lines
+ local line_height = 8
+ local height = (#lines * line_height) + (2 * padding)
 
-    -- Calculate the position to center the textbox above the tile
-    local x = x_tile * 8 + 4 - width / 2
-    local y = y_tile * 8 - height - 8
+ -- Calculate the position to center the textbox above the tile
+ local x = x_tile * 8 + 4 - width / 2
+ local y = y_tile * 8 - height - 8
 
-    -- Keeping text box on screen
-    x = max(x, cam.x + 2)
-    y = max(y, cam.y + 2)
-    while x + width > cam.x + 128 do
-        x -= 1
-    end
-    while y + height > cam.y + 128 do 
-        y -= 1
-    end
+ -- Keeping text box on screen
+ x = max(x, cam.x + 2)
+ y = max(y, cam.y + 2)
+ while x + width > cam.x + 128 do
+  x -= 1
+ end
+ while y + height > cam.y + 128 do 
+  y -= 1
+ end
 
-    -- Draw box
-    draw_rounded_rectangle(x, y, width, height, radius, background_color)
-    -- Draw each line of text
-    for i, line in ipairs(lines) do
-        print(line, x + padding, y + padding + (i - 1) * line_height, text_color)
-    end
+ -- Draw box
+ draw_rounded_rectangle(x, y, width, height, radius, background_color)
+ -- Draw each line of text
+ for i, line in ipairs(lines) do
+  print(line, x + padding, y + padding + (i - 1) * line_height, text_color)
+ end
 end
 
 function split_text(text, max_width_pixels)
-    local result = {}
-    local start = 1
-    local length = #text
-    local line_width = 0
-    local char_width = 4
-    while start <= length do
-        local end_pos = start
-        line_width = 0
-        while end_pos <= length do
-            local char = sub(text, end_pos, end_pos)
-            if char == '\n' then
-                local line = sub(text, start, end_pos - 1)
-                add(result, line)
-                start = end_pos + 1
-                break
-            else
-                line_width = line_width + char_width
+ local result = {}
+ local start = 1
+ local length = #text
+ local line_width = 0
+ local char_width = 4
+ while start <= length do
+  local end_pos = start
+  line_width = 0
+  while end_pos <= length do
+   local char = sub(text, end_pos, end_pos)
+   if char == '\n' then
+    local line = sub(text, start, end_pos - 1)
+    add(result, line)
+    start = end_pos + 1
+    break
+   else
+    line_width = line_width + char_width
 
-                if line_width <= max_width_pixels then
-                    end_pos = end_pos + 1
-                else
-                    local line = sub(text, start, end_pos - 1)
-                    add(result, line)
-                    start = end_pos
-                    break
-                end
-            end
-        end
-        if end_pos > length then
-            local line = sub(text, start, length)
-            add(result, line)
-            break
-        end
+    if line_width <= max_width_pixels then
+     end_pos = end_pos + 1
+    else
+     local line = sub(text, start, end_pos - 1)
+     add(result, line)
+     start = end_pos
+     break
     end
-    return result
+   end
+  end
+  if end_pos > length then
+   local line = sub(text, start, length)
+   add(result, line)
+   break
+  end
+ end
+ return result
 end
 
 function draw_float_meter()
-    if state_is('floating') then
-        rectfill(player.x - 1, player.y - 9,
-        player.x + player.float_meter - 2, player.y - 9,
-        8)
-        rect(player.x-2,player.y-10,
-        player.x+8,player.y-8, 2)
-    end
+ if state_is('floating') then
+  rectfill(player.x - 1, player.y - 9,
+  player.x + player.float_meter - 2, player.y - 9,
+  8)
+  rect(player.x-2,player.y-10,
+  player.x+8,player.y-8, 2)
+ end
 end
 
 -- ⬅️➡️⬆️⬇️❎🅾️
 hover_key = {
-    draw = function(obj)
-        print('🅾️', obj.x, obj.y - obj.hover_height, 13)
-    end,
-    update = function(obj)
-        obj.is_hovered = touch(player, obj) and not obj.is_held
-        if obj.is_hovered then
-            obj.hover_height = lerp(obj.hover_height, 8, 0.5)
-            if btnp(4) then
-                obj.is_held = true
-                obj.is_hovered = false
-            end
-        else
-            obj.hover_height = 0
-        end
-    end
+ draw = function(obj)
+  print('🅾️', obj.x, obj.y - obj.hover_height, 13)
+ end,
+ update = function(obj)
+  obj.is_hovered = touch(player, obj) and not obj.is_held
+  if obj.is_hovered then
+   obj.hover_height = lerp(obj.hover_height, 8, 0.5)
+   if btnp(4) then
+    obj.is_held = true
+    obj.is_hovered = false
+   end
+  else
+   obj.hover_height = 0
+  end
+ end
 }
 -->8
 --src/scenes/menu.lua
 function menu.init()
-    logo_x = 0
-    logo_y = 0
-    --music(46)
-    blink = {
-        colors = {0,2,8,7,8,2},
-        index = 0,
-        current_frame = 0,
-        speed = 5
-    }
-    start_game = false
-    flashes_remaining = 5
+ logo_x = 0
+ logo_y = 0
+ --music(46)
+ blink = {
+  colors = {0,2,8,7,8,2},
+  index = 0,
+  current_frame = 0,
+  speed = 5
+ }
+ start_game = false
+ flashes_remaining = 5
 end
 
 function menu.update()
-    if btnp(4) or btnp(5) then
-        start_game = true
-        blink.speed = 1
-    end
-    blink.current_frame += 1
-    if blink.current_frame % blink.speed == 0 then
-        if blink.index + 1 > #blink.colors then
-            blink.index = 0
-        else
-            blink.index += 1
-        end
-    end
-    if start_game == true and blink.index == 0 then
-        flashes_remaining -= 1
-        if flashes_remaining == 0 then
-            current_state = game
-            current_state.init()
-        end
-    end
+ if btnp(4) or btnp(5) then
+  start_game = true
+  blink.speed = 1
+ end
+ blink.current_frame += 1
+ if blink.current_frame % blink.speed == 0 then
+  if blink.index + 1 > #blink.colors then
+   blink.index = 0
+  else
+   blink.index += 1
+  end
+ end
+ if start_game == true and blink.index == 0 then
+  flashes_remaining -= 1
+  if flashes_remaining == 0 then
+   current_state = game
+   current_state.init()
+  end
+ end
 end
 
 function menu.draw()
-    cls()
-    sspr(12 * 8, 0, 32, 32, 32 + 16, 32 + 16)
-    sspr(12 * 8, 32, 32, 32, 32 + 20, 16)
-    print("press ❎ to start", 30, 100, blink.colors[blink.index])
+ cls()
+ sspr(12 * 8, 0, 32, 32, 32 + 16, 32 + 16)
+ sspr(12 * 8, 32, 32, 32, 32 + 20, 16)
+ print("press ❎ to start", 30, 100, blink.colors[blink.index])
 end
 -->8
 --src/scenes/game.lua
 
 function game.update()
-    player_update()
-    player_animate()
-    add_splashes_at_random(10)
-    for c in all(bg_graphics) do 
-        c:update() 
-    end
-    for splash in all(splashes) do
-        splash:update()
-    end
-    for u in all(umb) do
-        u:update()
-    end
-    cam_update()
-    for m in all(moons) do
-        m:update()
-    end
-    for f in all(flags) do
-        f:update()
-    end
-    for fan in all(fans) do 
-        fan:update()
-    end
-    for r in all(rain) do
-        r:update()
-    end
-    for g in all(graphics) do
-        g:update()
-    end
-    for spike in all(floating_spikes) do 
-        spike:update()
-    end
-    for s in all(signs) do 
-        s:update()
-    end
-    for block in all(interactive_blocks) do
-        block:update()
-    end
-    for block in all(dissolve_blocks) do
-        block:update()
-    end
-    for button in all(buttons) do 
-        button:update()
-    end
-    for laser in all(lasers) do
-        laser:update()
-    end
-    if debug_on then
-        debug_update()
-    end
-    if not controls_on then
-        pause_controls_end = time()
-        if pause_controls_end - pause_controls_start >= pause_controls_duration then
-            controls_on = true
-        end
-    end
-    local umbrella_pickup = {
-        x = umb_spawn_x,
-        y = umb_spawn_y,
-        w = 7,
-        h = 7
-    }
-    if touch(player, umbrella_pickup) then
-        umbrella_collected = true
-    end
+ player_update()
+ player_animate()
+ add_splashes_at_random(10)
+ for c in all(bg_graphics) do 
+  c:update() 
+ end
+ for splash in all(splashes) do
+  splash:update()
+ end
+ for u in all(umb) do
+  u:update()
+ end
+ cam_update()
+ for m in all(moons) do
+  m:update()
+ end
+ for f in all(flags) do
+  f:update()
+ end
+ for fan in all(fans) do 
+  fan:update()
+ end
+ for r in all(rain) do
+  r:update()
+ end
+ for g in all(graphics) do
+  g:update()
+ end
+ for spike in all(floating_spikes) do 
+  spike:update()
+ end
+ for s in all(signs) do 
+  s:update()
+ end
+ for block in all(interactive_blocks) do
+  block:update()
+ end
+ for block in all(dissolve_blocks) do
+  block:update()
+ end
+ for button in all(buttons) do 
+  button:update()
+ end
+ for laser in all(lasers) do
+  laser:update()
+ end
+ if debug_on then
+  debug_update()
+ end
+ if not controls_on then
+  pause_controls_end = time()
+  if pause_controls_end - pause_controls_start >= pause_controls_duration then
+   controls_on = true
+  end
+ end
+ local umbrella_pickup = {
+  x = umb_spawn_x,
+  y = umb_spawn_y,
+  w = 7,
+  h = 7
+ }
+ if touch(player, umbrella_pickup) then
+  umbrella_collected = true
+ end
 end
 
 function game.draw()
-    -- Clear the screen every frame
-    cls(0)
-    pal(0, 129, 1)
-    pal(10, 1, 1)
-    pal(9, 130, 1)
-    pal(1, 131, 1)
-    pal(11, 139, 1)
-    for c in all(bg_graphics) do 
-        c:draw() 
-    end
-    -- First render background rain
-    for drop in all(rain) do
-        drop:draw()
-    end
-    for l in all(lasers) do 
-        l:draw()
-    end
+ -- Clear the screen every frame
+ cls(0)
+ pal(0, 129, 1)
+ pal(10, 1, 1)
+ pal(9, 130, 1)
+ pal(1, 131, 1)
+ pal(11, 139, 1)
+ for c in all(bg_graphics) do 
+  c:draw() 
+ end
+ -- First render background rain
+ for drop in all(rain) do
+  drop:draw()
+ end
+ for l in all(lasers) do 
+  l:draw()
+ end
 
-    -- Render map
-    map(0,0)
+ -- Render map
+ map(0,0)
 
-    -- Render everything else
-    for splash in all(splashes) do
-        splash:draw()
-    end
-    for u in all(umb) do
-        u:draw()
-    end
-    for m in all(moons) do
-        m:draw()
-    end
-    for f in all(flags) do
-        f:draw()
-    end
-    for spike in all(floating_spikes) do 
-        spike:draw()
-    end
-    for fan in all(fans) do 
-        fan:draw()
-    end
-    for button in all(buttons) do 
-        button:draw()
-    end
-    for block in all(interactive_blocks) do
-        block:draw()
-    end
-    for block in all(dissolve_blocks) do
-        block:draw()
-    end
-    -- Render player
-    spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
-    if debug_on then 
-        player_debug_draw()
-    end
+ -- Render everything else
+ for splash in all(splashes) do
+  splash:draw()
+ end
+ for u in all(umb) do
+  u:draw()
+ end
+ for m in all(moons) do
+  m:draw()
+ end
+ for f in all(flags) do
+  f:draw()
+ end
+ for spike in all(floating_spikes) do 
+  spike:draw()
+ end
+ for fan in all(fans) do 
+  fan:draw()
+ end
+ for button in all(buttons) do 
+  button:draw()
+ end
+ for block in all(interactive_blocks) do
+  block:draw()
+ end
+ for block in all(dissolve_blocks) do
+  block:draw()
+ end
+ -- Render player
+ spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
+ if debug_on then 
+  player_debug_draw()
+ end
 
-    -- Float meter for umbrella
-    if umbrella_collected then
-        draw_float_meter()
-    end
-    for i = 1, #enm do
-        local myenm=enm[i]
-        spr(myenm.spr, myenm.x, myenm.y)	
-    end
-    for s in all(signs) do 
-        s:draw()
-    end
-    draw_moon_counter(num_moons_collected)
-    draw_death_counter(num_deaths)
-    for g in all(graphics) do
-        g:draw()
-    end
-    if debug_on then
-        debug_draw()
-    end
+ -- Float meter for umbrella
+ if umbrella_collected then
+  draw_float_meter()
+ end
+ for i = 1, #enm do
+  local myenm=enm[i]
+  spr(myenm.spr, myenm.x, myenm.y)	
+ end
+ for s in all(signs) do 
+  s:draw()
+ end
+ draw_moon_counter(num_moons_collected)
+ draw_death_counter(num_deaths)
+ for g in all(graphics) do
+  g:draw()
+ end
+ if debug_on then
+  debug_draw()
+ end
 end
 
 function game.reset()
-    local spawn_x, spawn_y, spawn_at_flag = false
-    for f in all(flags) do
-        if f.up == true then
-            spawn_x = f.x
-            spawn_y = f.y
-            spawn_at_flag = true
-        end
-    end
-    if not spawn_at_flag then
-        player_init(default_spawn_x, default_spawn_y)
-        cam_init(default_spawn_x, default_spawn_y)
-    else
-        cam_init(spawn_x, spawn_y)
-        player_init(spawn_x, spawn_y)
-    end
-    umb = {}
-    add_umb()
-    rain={}
-    for i = 1, 100 do
-        add_rain()
-    end
-    for ib in all(interactive_blocks) do
-        ib_rspwn(ib)
-    end
-    for db in all(dissolve_blocks) do
-        db.durability = 3
-        db.is_dead = false
-    end
-    enm={}
-    local my_en={}
-    my_en.x=90
-    my_en.y=20
-    my_en.spr=54
-    add(enm, my_en)
+ local spawn_x, spawn_y, spawn_at_flag = false
+ for f in all(flags) do
+  if f.up == true then
+   spawn_x = f.x
+   spawn_y = f.y
+   spawn_at_flag = true
+  end
+ end
+ if not spawn_at_flag then
+  player_init(default_spawn_x, default_spawn_y)
+  cam_init(default_spawn_x, default_spawn_y)
+ else
+  cam_init(spawn_x, spawn_y)
+  player_init(spawn_x, spawn_y)
+ end
+ umb = {}
+ add_umb()
+ rain={}
+ for i = 1, 100 do
+  add_rain()
+ end
+ for ib in all(interactive_blocks) do
+  ib_rspwn(ib)
+ end
+ for db in all(dissolve_blocks) do
+  db.durability = 3
+  db.is_dead = false
+ end
+ enm={}
+ local my_en={}
+ my_en.x=90
+ my_en.y=20
+ my_en.spr=54
+ add(enm, my_en)
 end
 
 function game.init()
-    --music(30)
-    umbrella_collected = false
-    bg_graphics = {}
-    add_all_lasers()
-    for i = 0, 10 do 
-        add_circ()
-    end
-    graphics = {}
-    num_moons_collected = 0
-    moons = {}
-    flags = {}
-    for tile_x = 0, 127 do
-        for tile_y = 0, 127 do 
-            local x, y = tile_x * 8, tile_y * 8
-            if fget(mget(tile_x, tile_y), moon_flag) then
-                add_moon(x, y)
-                if not debug_on then mset(tile_x, tile_y, 0) end
-            elseif fget(mget(tile_x, tile_y), save_flag) then
-                add_flag(tile_x, tile_y)
-                if not debug_on then mset(tile_x, tile_y, 0) end
-            elseif fget(mget(tile_x, tile_y), block_flag) then
-                add_interactive_block('blank', x, y)
-                if not debug_on then mset(tile_x, tile_y, 0) end
-            end
-        end
-    end
+ --music(30)
+ umbrella_collected = false
+ bg_graphics = {}
+ add_all_lasers()
+ for i = 0, 10 do 
+  add_circ()
+ end
+ graphics = {}
+ num_moons_collected = 0
+ moons = {}
+ flags = {}
+ for tile_x = 0, 127 do
+  for tile_y = 0, 127 do 
+   local x, y = tile_x * 8, tile_y * 8
+   if fget(mget(tile_x, tile_y), moon_flag) then
+    add_moon(x, y)
+    if not debug_on then mset(tile_x, tile_y, 0) end
+   elseif fget(mget(tile_x, tile_y), save_flag) then
+    add_flag(tile_x, tile_y)
+    if not debug_on then mset(tile_x, tile_y, 0) end
+   elseif fget(mget(tile_x, tile_y), block_flag) then
+    add_interactive_block('blank', x, y)
+    if not debug_on then mset(tile_x, tile_y, 0) end
+   end
+  end
+ end
 
-    buttons = {}
-    add_all_buttons()
+ buttons = {}
+ add_all_buttons()
 
-    floating_spikes = {}
-    add_all_spikes()
+ floating_spikes = {}
+ add_all_spikes()
 
-    fans = {}
-    add_all_fans()
+ fans = {}
+ add_all_fans()
 
-    dissolve_blocks = {}
-    init_dissolve_blocks()
+ dissolve_blocks = {}
+ init_dissolve_blocks()
 
-    signs = {}
-    splashes = {}
-    init_signs()
-    player_init(default_spawn_x, default_spawn_y)
+ signs = {}
+ splashes = {}
+ init_signs()
+ player_init(default_spawn_x, default_spawn_y)
 
 
-    game.reset()
-    num_deaths = 0
-    controls_on = true
+ game.reset()
+ num_deaths = 0
+ controls_on = true
 end
 
 -->8
 --src/utility/collision.lua
 function collides_with_block(obj, dir)
-    for block in all(interactive_blocks) do
-    end
+ for block in all(interactive_blocks) do
+ end
 end
 --[[
-    O*******
-    ********
-    ********
-    ********
-    ********
-    ********
-    ********
-    O******* [left]
+ O*******
+ ********
+ ********
+ ********
+ ********
+ ********
+ ********
+ O******* [left]
 
-    *******O
-    ********
-    ********
-    ********
-    ********
-    ********
-    ********
-    *******O [right]
+ *******O
+ ********
+ ********
+ ********
+ ********
+ ********
+ ********
+ *******O [right]
 
-    O******O
-    ********
-    ********
-    ********
-    ********
-    ********
-    ********
-    ******** [up]
+ O******O
+ ********
+ ********
+ ********
+ ********
+ ********
+ ********
+ ******** [up]
 
-    ********
-    ********
-    ********
-    ********
-    ********
-    ********
-    ********
-    O******O [down]
+ ********
+ ********
+ ********
+ ********
+ ********
+ ********
+ ********
+ O******O [down]
 ]]--
 
 function collides_with_map2(x, y, w, h, dir)
-    local x1, x2, y1, y2
-    if dir == 'left' then
-        x1, x2 = x / 8, x / 8
-        y1, y2 = y / 8, (y + h) / 8
-    elseif dir == 'right' then
-        x1, x2 = (x + w) / 8, (x  + w) / 8
-        y1, y2 = y / 8, (y + h) / 8
-    elseif dir == 'up' then
-        x1, x2 = x / 8, (x + w) / 8
-        y1, y2 = y / 8, y / 8
-    else 
-        x1, x2 = x / 8, (x + w) / 8
-        y1, y2 = (y + h) / 8, (y + h) / 8
-    end
-    return fget(mget(x1, y1)) | fget(mget(x2, y2))
+ local x1, x2, y1, y2
+ if dir == 'left' then
+  x1, x2 = x / 8, x / 8
+  y1, y2 = y / 8, (y + h) / 8
+ elseif dir == 'right' then
+  x1, x2 = (x + w) / 8, (x  + w) / 8
+  y1, y2 = y / 8, (y + h) / 8
+ elseif dir == 'up' then
+  x1, x2 = x / 8, (x + w) / 8
+  y1, y2 = y / 8, y / 8
+ else 
+  x1, x2 = x / 8, (x + w) / 8
+  y1, y2 = (y + h) / 8, (y + h) / 8
+ end
+ return fget(mget(x1, y1)) | fget(mget(x2, y2))
 end
 
 function collides_with_map(obj, dir, flag)
-    -- token saving? idek
-    local x = obj.x
-    local y = obj.y
-    local dx = obj.dx
-    local dy = obj.dy
-    local w = obj.w
-    local h = obj.h
-    local hb = obj.hb
+ -- token saving? idek
+ local x = obj.x
+ local y = obj.y
+ local dx = obj.dx
+ local dy = obj.dy
+ local w = obj.w
+ local h = obj.h
+ local hb = obj.hb
 
-    --collision box
-    local x1 = 0
-    local x2 = 0
-    local y1 = 0
-    local y2 = 0
+ --collision box
+ local x1 = 0
+ local x2 = 0
+ local y1 = 0
+ local y2 = 0
 
-    --placing collision box
-    if dir == "left" then
-        x1 = x + hb.x1 - 1
-        x2 = x + hb.x1 - 1
-        y1 = y + hb.y1 + dy
-        y2 = y + hb.y2 + dy - 3
-    elseif dir == "right" then
-        x1 = x + hb.x2 + 1
-        x2 = x + hb.x2 + 1
-        y1 = y + hb.y1 + dy
-        y2 = y + hb.y2 + dy - 3
-    elseif dir == "up" then
-        x1 = x + hb.x1 + 3
-        x2 = x + hb.x2 - 3
-        y1 = y + hb.y1 + dy
-        y2 = y + hb.y1 + dy
-    elseif dir == "down" then	
-        x1 = x + hb.x1 + dx
-        x2 = x + hb.x2 + dx
-        y1 = y + h
-        y2 = y + h
-    end
+ --placing collision box
+ if dir == "left" then
+  x1 = x + hb.x1 - 1
+  x2 = x + hb.x1 - 1
+  y1 = y + hb.y1 + dy
+  y2 = y + hb.y2 + dy - 3
+ elseif dir == "right" then
+  x1 = x + hb.x2 + 1
+  x2 = x + hb.x2 + 1
+  y1 = y + hb.y1 + dy
+  y2 = y + hb.y2 + dy - 3
+ elseif dir == "up" then
+  x1 = x + hb.x1 + 3
+  x2 = x + hb.x2 - 3
+  y1 = y + hb.y1 + dy
+  y2 = y + hb.y1 + dy
+ elseif dir == "down" then	
+  x1 = x + hb.x1 + dx
+  x2 = x + hb.x2 + dx
+  y1 = y + h
+  y2 = y + h
+ end
 
-    --debug
-    if debug_on then
-        player.db.x1=x1
-        player.db.y1=y1
-        player.db.x2=x2
-        player.db.y2=y2
-    end
+ --debug
+ if debug_on then
+  player.db.x1=x1
+  player.db.y1=y1
+  player.db.x2=x2
+  player.db.y2=y2
+ end
 
-    --pixels to tiles
-    x1 /= 8
-    x2 /= 8
-    y1 /= 8
-    y2 /= 8
+ --pixels to tiles
+ x1 /= 8
+ x2 /= 8
+ y1 /= 8
+ y2 /= 8
 
-    --check collide (finally)
-    if fget(mget(x1, y1), flag)
-    or fget(mget(x1, y2), flag)
-    or fget(mget(x2, y1), flag)
-    or fget(mget(x2, y2), flag) then
-        return true
-    else
-        return false
-    end
+ --check collide (finally)
+ if fget(mget(x1, y1), flag)
+ or fget(mget(x1, y2), flag)
+ or fget(mget(x2, y1), flag)
+ or fget(mget(x2, y2), flag) then
+  return true
+ else
+  return false
+ end
 end
 --[[
 function collides_with_map(_obj, _dir, _flag)
-    local x = _obj.x
-    local y = _obj.y
-    local dx = _obj.dx
-    local dy = _obj.dy
-    local w = _obj.w
-    local h = _obj.h
-    local x1, x2, y1, y2
-    if _dir == 'left' then
-        x1 = x
-        x2 = x + dx
-        y1 = y
-        y2 = y + h
-    elseif _dir == "right" then
-        x1 = x + w
-        x2 = x + w + dx
-        y1 = y
-        y2 = y + h
-    elseif _dir == "up" then
-        x1 = x
-        x2 = x + w
-        y1 = y
-        y2 = y + dy
-    elseif _dir == "down" then	
-        x1 = x
-        x2 = x + w
-        y1 = y + h
-        y2 = y + h + dy
-    end
-    --debug
-    if debug_on and _obj == player then
-        player.db.x1 = x1
-        player.db.y1 = y1
-        player.db.x2 = x2
-        player.db.y2 = y2
-    end
-    x1 /= 8
-    x2 /= 8
-    y1 /= 8
-    y2 /= 8
-    return fget(mget(x1, y1), _flag)
-    or fget(mget(x1, y2), _flag)
-    or fget(mget(x2, y1), _flag)
-    or fget(mget(x2, y2), _flag)
+ local x = _obj.x
+ local y = _obj.y
+ local dx = _obj.dx
+ local dy = _obj.dy
+ local w = _obj.w
+ local h = _obj.h
+ local x1, x2, y1, y2
+ if _dir == 'left' then
+  x1 = x
+  x2 = x + dx
+  y1 = y
+  y2 = y + h
+ elseif _dir == "right" then
+  x1 = x + w
+  x2 = x + w + dx
+  y1 = y
+  y2 = y + h
+ elseif _dir == "up" then
+  x1 = x
+  x2 = x + w
+  y1 = y
+  y2 = y + dy
+ elseif _dir == "down" then	
+  x1 = x
+  x2 = x + w
+  y1 = y + h
+  y2 = y + h + dy
+ end
+ --debug
+ if debug_on and _obj == player then
+  player.db.x1 = x1
+  player.db.y1 = y1
+  player.db.x2 = x2
+  player.db.y2 = y2
+ end
+ x1 /= 8
+ x2 /= 8
+ y1 /= 8
+ y2 /= 8
+ return fget(mget(x1, y1), _flag)
+ or fget(mget(x1, y2), _flag)
+ or fget(mget(x2, y1), _flag)
+ or fget(mget(x2, y2), _flag)
 end
 ]]
 function touch(a, b)
-    if a.x + a.w < b.x
-        or b.x + b.w < a.x
-        or a.y + a.h < b.y
-        or b.y + b.h < a.y then
-        return false
-    else
-        return true
-    end
+ if a.x + a.w < b.x
+  or b.x + b.w < a.x
+  or a.y + a.h < b.y
+  or b.y + b.h < a.y then
+  return false
+ else
+  return true
+ end
 end
 
 function adjacent_to_tile(obj, flag)
-    local x1 = (obj.x - 1) / 8
-    local x2 = (obj.x + obj.w + 1) / 8
-    local y1 = (obj.y + 2) / 8
-    local y2 = (obj.y + obj.h - 2) / 8
-    if fget(mget(x1, y1), flag)
-    or fget(mget(x1, y2), flag) then 
-        return 'l'
-    elseif fget(mget(x2, y1), flag)
-    or fget(mget(x2, y2), flag) then
-        return 'r'
-    else
-        return 'none'
-    end
+ local x1 = (obj.x - 1) / 8
+ local x2 = (obj.x + obj.w + 1) / 8
+ local y1 = (obj.y + 2) / 8
+ local y2 = (obj.y + obj.h - 2) / 8
+ if fget(mget(x1, y1), flag)
+ or fget(mget(x1, y2), flag) then 
+  return 'l'
+ elseif fget(mget(x2, y1), flag)
+ or fget(mget(x2, y2), flag) then
+  return 'r'
+ else
+  return 'none'
+ end
 end
 
 function is_off_screen(obj)
-    local _ENV = obj
-    return x > 1016 or x + w < 0 or y > 504 or y + h < 0
+ local _ENV = obj
+ return x > 1016 or x + w < 0 or y > 504 or y + h < 0
 end
 -->8
 --src/utility/constants.lua
 -- constants for player spawn location
-default_spawn_x = 93 *8 or 2 * 8
-default_spawn_y = 62 * 8 or 35 * 8
+--default_spawn_x = 102 *8 or 2 * 8
+--default_spawn_y = 21 * 8 or 35 * 8
 
+default_spawn_x = 2 * 8
+default_spawn_y = 35 * 8
 pause_controls_duration = 0.75
 
 -- physics constants
@@ -2087,126 +2091,120 @@ umb_spawn_y = default_spawn_y or 35 * 8
 -->8
 --src/utility/math.lua
 function distance(x1, y1, x2, y2)
-    return sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+ return sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
 end
 
 function lerp(a, b, t)
-    return a + (b - a) * t
+ return a + (b - a) * t
 end
 
 function clamp(num,maximum)
-    return mid(-maximum,num,maximum)
+ return mid(-maximum,num,maximum)
 end
 
 function center(x1, y1, x2, y2)
-    return (x2 - x1) / 2, (y2 - y1) / 2
+ return (x2 - x1) / 2, (y2 - y1) / 2
 end-->8
 --src/utility/debug.lua
 debug_info = {}
 
 function error(message) 
-    local x, y = 2, 120
-    if cam.x != nil and cam.y != nil then
-        x += cam.x
-        y += cam.y
-    end
-    print(message, x, y, debug_color)
+ local x, y = 2, 120
+ if cam.x != nil and cam.y != nil then
+  x += cam.x
+  y += cam.y
+ end
+ print(message, x, y, debug_color)
 end
 
 function log(s)
-    add(debug_info, s)
+ add(debug_info, s)
 end
 
 function debug_update()
-    debug_info[1] = ' ram:'..stat(0)
-    debug_info[2] = 'cput:'..stat(1)
-    debug_info[3] = 'cpus:'..stat(2)
+ debug_info[1] = ' ram:'..stat(0)
+ debug_info[2] = 'cput:'..stat(1)
+ debug_info[3] = 'cpus:'..stat(2)
 end
 
 function debug_draw()
-    -- Everything we are logging
-    for i, message in ipairs(debug_info) do
-        print(message, cam.x, cam.y + (i - 1) * 6, debug_color)
-    end
-    -- Hitbox display
-    rect(
-        player.db.x1,
-        player.db.y1,
-        player.db.x2,
-        player.db.y2,
-        11
-    )
-    print('dx = '..tostr(player.dx), cam.x, cam.y + 4 * 6, debug_color)
-    print('dy = '..tostr(player.dy), cam.x, cam.y + 5 * 6, debug_color)
+ -- Everything we are logging
+ for i, message in ipairs(debug_info) do
+  print(message, cam.x, cam.y + (i - 1) * 6, debug_color)
+ end
+ -- Hitbox display
+ rect(
+  player.db.x1,
+  player.db.y1,
+  player.db.x2,
+  player.db.y2,
+  11
+ )
+ print('dx = '..tostr(player.dx), cam.x, cam.y + 4 * 6, debug_color)
+ print('dy = '..tostr(player.dy), cam.x, cam.y + 5 * 6, debug_color)
 end-->8
 --src/utility/physics.lua
 function collision(obj)
-    local collisions = 0
-    if obj.dy > 0 then
-        collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
-        while (collisions & 1) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do     
-            obj.dy -= 1
-            if obj.dy < 0 then 
-                obj.dy = 0
-                break
-            end
-            collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
-        end
-    elseif obj.dy < 0 then
-        collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
-        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
-            obj.dy += 1
-            if obj.dy > 0 then 
-                obj.dy = 0
-                break
-            end
-            collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
-        end
-    end
-    if obj.dx < 0 then
-        collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
-        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
-            obj.dx += 1
-            if obj.dx > 0 then 
-                obj.dx = 0 
-                break
-            end
-            collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
-        end
-    elseif obj.dx > 0 then
-        collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
-        while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
-            obj.dx -= 1
-            if obj.dx < 0 then 
-                obj.dx = 0 
-                break
-            end
-            collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
-        end
-    end
+ local collisions = 0
+ if obj.dy > 0 then
+  collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
+  while (collisions & 1) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do  
+   obj.dy -= 1
+   if obj.dy < 0 then 
+    obj.dy = 0
+    break
+   end
+   collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'down')
+  end
+ elseif obj.dy < 0 then
+  collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
+  while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+   obj.dy += 1
+   if obj.dy > 0 then 
+    obj.dy = 0
+    break
+   end
+   collisions = collides_with_map2(obj.x, obj.y + obj.dy, obj.w, obj.h, 'up')
+  end
+ end
+ if obj.dx < 0 then
+  collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
+  while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+   obj.dx += 1
+   if obj.dx > 0 then 
+    obj.dx = 0 
+    break
+   end
+   collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'left')
+  end
+ elseif obj.dx > 0 then
+  collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
+  while (collisions & 2) != 0 and (obj.type != 'block' or (collisions & 64) == 0) do
+   obj.dx -= 1
+   if obj.dx < 0 then 
+    obj.dx = 0 
+    break
+   end
+   collisions = collides_with_map2(obj.x + obj.dx, obj.y, obj.w, obj.h, 'right')
+  end
+ end
 end
 
 function move(obj, flags)
-    if obj.dy == 0 then
-        obj.dx *= (1 - floor_friction)
-    end
-    obj.dy += gravity
-    collision(obj, flags)
-    obj.x += obj.dx
-    obj.y += obj.dy
-    if obj.x < map_start then
-        obj.x = map_start
-    elseif obj.x > map_end - obj.w then
-        obj.x = map_end - obj.w
-    end
+ if obj.dy == 0 then
+  obj.dx *= (1 - floor_friction)
+ end
+ obj.dy += gravity
+ collision(obj, flags)
+ obj.x += obj.dx
+ obj.y += obj.dy
+ if obj.x < map_start then
+  obj.x = map_start
+ elseif obj.x > map_end - obj.w then
+  obj.x = map_end - obj.w
+ end
 end
 
--- todo:
--- 1. optional map editor
--- 2. map layout
--- 3. one more mechanic
--- 4. do soemthing interesting
--- 	  with physics blocks
 __gfx__
 00000000077777700000000007777770077777700000777007777770000000000777777070888800000000008000000800700000070000000000000000000000
 00000000777277270777777077727727777277270077777777727727077777707772772708888280000000000000000007700000077007770007770077000777
@@ -2273,29 +2271,29 @@ b313313b991991999199191191991919b333333b31199113b3333333313133313333313b07000760
 000300001111111199111111111199993311113b331111333311111111111111111111330dd000d000006d000000000000000007776600000000777660000000
 000000003333333391911113311191990333333003333330033333333333333333333330d000000d00000d000688886000000007776600000000777660000000
 25450000000000070000757575750000062600000000000066000000348700000064000000640000550074000000000055000000000000000000000035668500
-00656600b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b60000000000
+00656600b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b68500b0000000000000000063556600b00047850000006547000000
 254500000000000000000000000000000000000000000000660000006685000000560000000700655685470000000065568500000063000000000000356685b0
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b600000000b6850000000000000000000055344500000047855555556547000000
 25450000000000000000000000000000000054760000000057000000668500000066000000000065668500000000006566850000000000000000000035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b600000000b68500070000000000000055340545b6b6b647857575756547000000
 25450000000000000000000000000000000616162600000000000000668500006566b00000000065668500940000006566850000000000000000630035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b600000000b6b65555555555555555556717174600000047000000000047000000
 25450000000000000000000000000000000000000000000000000000668500006566260000000065668500470000006566850000000000000000000035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000b00047474747474747000000
 254584746484647694005555556400b1548455555555557484640000668555555566555555555565668574846454846566855464b18476a40000000035668500
-b0656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+b0656600000000000000000000000000000000000000000000000000000000b6000000000000000000000000000000000000000000000000000000b600000000
 7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777787000000b035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b6000000000000000000000000000000000000000000000000000000b600000000
 0000000000000000000000000000000000000000000000000000000000667575757575000000000000000000000000000000757565354585000000b035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b6000000000000000000000000000000000000000000000000000000b600000000
 0000000000000000000000000000000000000000b0000000000000000066850000000000000000000000000000000000b000000065354585000000b035668583
-81656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+81656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000b1000000000000b600000000
 0000000000000000000000000000000000b000000000000000b1000000660000000000000000000000000000000000000000000065354585000000b035668500
-00656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+00656600000000000000000000000000000000000000000000000000000000b6000000000000000000000000000000000000061616162600000000b600000000
 00000000b000000000b000000000b00000000000000000000056000000660000003414144455000000005534141444000000000000354585000000b035668500
-b0656600000000000000000000000000000000000000000000000000000000b60000000000000000000000000000000000000000000000000000000000000000
+b0656600000000000000000000000000000000000000000000000000000000b6000000000000000000000000000000000000000000000000000000b600000000
 000000000000000000000000000000000000006400000000006600000066000000361717461616161616163617174600000000b000354585000000b035668500
-00656600000000000000000000000000000000000000000000000000000000b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b60000000000
+00656600000000000000000000000000000000000000000000000000000000b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b600000000
 0000a40000000000000000940000000000000056850000000066000000660000000066000000000000000000656600000000000000354585000000b035668500
 00656600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 000007000000000000000007000000005500003644850000006600000066000000006600000000b0b00000b0656600000000000000354585000000b035668500
@@ -2489,19 +2487,19 @@ __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004377777777777777777777777777777777777777777777777777777777777777777777777777777777777777776b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b6b00000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000000002700000000000000000000000000000000535400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000b00002900000000000000000000000000000000535400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000000002900000000000000000000000000000000535400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000000002900000000000000000076446161620000535400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000075000b00002900000000006767000000660000000000535400000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000002900000000000000000000663818183976717178000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000003700000000000000000000660000000057575757000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000655800000065001b0000000000000000660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777800767777777777774166580000566661616200000000000060660000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-5254000000000000005653525254580000000000000000006600000000000000000000000000000000000000000000000000000000000000000000005366580b00566600000000006767000000750000000000000000000067670000000000000000000000000000000000000000000000000000000000000000000000000000
-525400000000000b005653525254580000000000000000006600000000000000000000000000000000000000000000000b00000000000000000000005366580000566600000000000000000000000000000000676700000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-52540000000000000056637171645800000000000000000066000000486700000000000000000000700000000000000000000000000000000b0000005366580000566655555555555555555555555555555555555555555555555555555555555555555555555555555555550000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000043777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777000000
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000000002700000000000000000000000000000000535400000000000000000000000000000000000000000000000000000000007400000000000000000074000000
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000b000029000000000000000000000b000000000053540b000000000000555555000000270000001b00000000000000000000003b00000000000000000074000000
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066000000002900000000000000000000000000000000535400000000000000434144000000290000007000000000000000000000003b00000000000000000074000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000660000000029000000000000000000764461620000767171780000000000005352540038183a1818181818181818183900000000003b00000000000b00000074000000
+0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000075000b000029000000000000000000006600000000575757570000000000005352540b0000290000005500000055000000000000004378000000000000000074000000
+000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000002900000000000000000000660000000000000000270000000000535254000000290000566536363674580000000000006655555555550000000074000000
+000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006b000000003700000000000000000000660000000000000000290000000000637164000000290000566600000000000000000000005377777777785800000074000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000655800005665001b00000000000000006600000000000000002900000000005757570000002900005666000b0000000000000000007500000000000000000074000000
+77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777778007677777777777741665800005666616162000000000000606600000000000000002900000000000000000000002900005666002b0000000000000000006b00000000000000000074000000
+5254000000000000005653525254580000000000000000006600000000000000000000000000000000000000000000000000000000000000000000005366580b00566600000000000000000000750000000000000000370000000000000000000000370000566377777778580000000000006b00000074000000000074000000
+525400000000000b005653525254580000000000000000006600000000000000000000000000000000000000000000000b00000000000000000000005366580000566600000000000000000000000000000000000000000000000036363636363636000000000000000000000000000000006b00000074000000000074000000
+52540000000000000056637171645800000000000000000066000000486700000000000000000000700000000000000000000000000000000b0000005366580000566655555555555555555555555555555555555555555555555555555555555555555555000000000000000000000000006500000074580000005674000000
 __sfx__
 010f00001e3421e3421e3421e34200300203002134221342203422034220342203423a300373001c3421c3421e3421e342183002134221342213001e3421e342053000530025342253422334221342203421c342
 010f00001e3421e3421e3421e34203300203002134221342233422334223342233423a3003730021342203421c3421c342183001934219342213001e3421e3421e3421e3421e3421e3451e3421c3421e3421c342

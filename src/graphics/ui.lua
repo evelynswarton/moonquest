@@ -97,8 +97,8 @@ end
 
 function draw_float_meter()
     if state_is('floating') then
-        rectfill(player.x - 1, player.y - 9,
-        player.x + player.float_meter - 2, player.y - 9,
+        rectfill(player.x - 2, player.y - 9,
+        player.x + flr(player.float_meter) - 1, player.y - 9,
         8)
         rect(player.x-2,player.y-10,
         player.x+8,player.y-8, 2)
