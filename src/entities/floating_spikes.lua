@@ -19,6 +19,9 @@ function add_all_spikes()
     add_floating_spike(two_point_path(95, 51, 95, 47), 2)
     add_floating_spike(two_point_path(97, 47, 97, 51), 2)
     add_floating_spike(two_point_path(67, 50, 67, 47), 2)
+    add_floating_spike(two_point_path(113, 28, 113, 31), 2)
+    add_floating_spike(two_point_path(117, 28, 117, 31), 2)
+    add_floating_spike(two_point_path(121, 28, 121, 31), 2)
 end
 
 function two_point_path(x1, y1, x2, y2)
