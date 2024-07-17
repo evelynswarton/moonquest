@@ -9,6 +9,10 @@ function add_all_fans()
    add_fan(114, 36, 0, 0.3)
    add_fan(118, 36, 0, 0.3)
    add_fan(85, 50, 0, 0.3)
+   add_fan(102, 63, 0, 0.3)
+   add_fan(120, 63, 0, 0.3)
+   add_fan(125, 62, 0, 0.3)
+   add_fan(126, 43, 0, 0.3)
 end
 
 function add_fan(x, y, r, f)
