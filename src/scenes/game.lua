@@ -1,4 +1,3 @@
-
 function game.update()
     player_update()
     player_animate()
@@ -66,81 +65,36 @@ function game.update()
     end
 end
 
+function draw_obj(x) x:draw() end
+
 function game.draw()
-    -- Clear the screen every frame
-    cls(0)
-    pal(0, 129, 1)
-    pal(10, 1, 1)
-    pal(9, 130, 1)
-    pal(1, 131, 1)
-    pal(11, 139, 1)
-    for c in all(bg_graphics) do 
-        c:draw() 
-    end
-    -- First render background rain
-    for drop in all(rain) do
-        drop:draw()
-    end
-    for l in all(lasers) do 
-        l:draw()
-    end
-
-    -- Render map
-    map(0,0)
-
-    -- Render everything else
-    for splash in all(splashes) do
-        splash:draw()
-    end
-    for u in all(umb) do
-        u:draw()
-    end
-    for m in all(moons) do
-        m:draw()
-    end
-    for f in all(flags) do
-        f:draw()
-    end
-    for spike in all(floating_spikes) do 
-        spike:draw()
-    end
-    for fan in all(fans) do 
-        fan:draw()
-    end
-    for button in all(buttons) do 
-        button:draw()
-    end
-    for block in all(interactive_blocks) do
-        block:draw()
-    end
-    for block in all(dissolve_blocks) do
-        block:draw()
-    end
-    -- Render player
-    spr(player.current_sprite, player.x, player.y, 1, 1, player.flp)
-    if debug_on then 
-        player_debug_draw()
-    end
-
-    -- Float meter for umbrella
-    if umbrella_collected then
-        draw_float_meter()
-    end
-    for i = 1, #enm do
-        local myenm=enm[i]
-        spr(myenm.spr, myenm.x, myenm.y)	
-    end
-    for s in all(signs) do 
-        s:draw()
-    end
-    draw_moon_counter(num_moons_collected)
-    draw_death_counter(num_deaths)
-    for g in all(graphics) do
-        g:draw()
-    end
-    if debug_on then
-        debug_draw()
-    end
+ cls(0)
+ pal(0,129,1)
+ pal(10,1,1)
+ pal(9,130,1)
+ pal(1,131,1)
+ pal(11,139,1)
+ foreach(bg_graphics,draw_obj)
+ foreach(rain,draw_obj)
+ foreach(lasers,draw_obj) 
+ map(0,0)
+ foreach(splashes,draw_obj)
+ foreach(umb,draw_obj)
+ foreach(moons,draw_obj)
+ foreach(flags,draw_obj)
+ foreach(floating_spikes,draw_obj)
+ foreach(fans,draw_obj)
+ foreach(buttons,draw_obj)
+ foreach(interactive_blocks,draw_obj)
+ foreach(flags,draw_obj)
+ spr(player.current_sprite,player.x,player.y,1,1,player.flp)
+ if (debug_on) player_debug_draw()
+ if (umbrella_collected) draw_float_meter() 
+ foreach(signs,draw_obj)
+ draw_moon_counter(num_moons_collected)
+ draw_death_counter(num_deaths)
+ foreach(graphics,draw_obj)
+ if (debug_on) debug_draw()
 end
 
 function game.reset()
@@ -172,12 +126,6 @@ function game.reset()
         db.durability = 3
         db.is_dead = false
     end
-    enm={}
-    local my_en={}
-    my_en.x=90
-    my_en.y=20
-    my_en.spr=54
-    add(enm, my_en)
 end
 
 function game.init()

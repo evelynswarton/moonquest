@@ -1,28 +1,21 @@
--- usage:
--- button_signal[button.id] in {true, false}
--- depending on if button with given id is
--- pressed
-button_signal = {}
-
+button_dat={
+ {20,59,22,56},
+ {0,62,1,61},
+ {94,62,91,59},
+ {93,62,91,59},
+ {92,62,91,59},
+ {105,34,102,32},
+ {103,48,102,48},
+ {103,48,103,51},
+ {80,18,78,17},
+ {80,18,74,17}
+}
 function add_all_buttons() 
-    -- id's just increment for every button we add
-    -- 1, 2, 3, ...
-    --add_button(18, 62, 13, 59) -- 1
-    add_button(20, 59, 22, 56)
-    add_button(0, 62, 1, 61)
-    add_button(94, 62, 91, 59)
-    add_button(93, 62, 91, 59)
-    add_button(92, 62, 91, 59)
-    add_button(105, 34, 102, 32)
-    add_button(103, 48, 102, 48)
-    add_button(103, 48, 103, 51)
-    add_button(80, 18, 78, 17)
-    add_button(80, 18, 74, 17)
+ foreach(button_dat,function (b) add_button(b[1],b[2],b[3],b[4]) end)
 end
 
 function add_button(x_tile, y_tile, x_target, y_target)
     add(buttons, {
-        id = #buttons + 1,
         x = x_tile * 8,
         y = y_tile * 8,
         w = 8,
@@ -49,7 +42,6 @@ function add_button(x_tile, y_tile, x_target, y_target)
                 end
             end
             self.active = active
-            button_signal[self.id] = self.active
         end
     })
 end

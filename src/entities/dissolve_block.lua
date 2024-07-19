@@ -2,19 +2,14 @@
 dissolve_respawn_duration = 360
 
 function init_dissolve_blocks()
-    --[[
-    add_dissolve_block(10,36)
-    add_dissolve_block(11,36)
-    add_dissolve_block(12,36)
-    ]]
-    for x_tile = 0,127 do
-        for y_tile = 0,63 do
-            if mget(x_tile, y_tile) == 54 then
-                add_dissolve_block(x_tile, y_tile)
-                mset(x_tile, y_tile, 0)
-            end
-        end
-    end
+ for xt=0,127 do
+  for yt=0,63 do
+   if mget(xt,yt)==54 then
+    add_dissolve_block(xt,yt)
+    mset(xt,yt,0)
+   end
+  end
+ end
 end
 
 function add_dissolve_block(x, y)
@@ -70,18 +65,6 @@ function add_dissolve_block(x, y)
                     self.durability = 3
                 end
             end
-        end,
-        draw = function(self)
-            --[[if touch(self.hb, player) then
-                if self.durability > 66 then
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 11)
-                end
-                if self.durability > 33 then
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 14)
-                else
-                    rect(self.x, self.y, self.x + self.w, self.y + self.h, 8)
-                end
-            end]]
         end
     })
 end
