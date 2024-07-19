@@ -1,22 +1,20 @@
 function menu.init()
-    logo_x = 0
-    logo_y = 0
-    music(46)
-    blink = {
-        colors = {0,2,8,7,8,2},
-        index = 0,
-        current_frame = 0,
-        speed = 5
-    }
-    start_game = false
-    flashes_remaining = 5
+ music(46)
+ blink={
+  colors={0,2,8,7,8,2},
+  index = 0,
+  current_frame = 0,
+  speed = 5
+ }
+ start_game = false
+ flashes_remaining = 5
 end
 
 function menu.update()
-    if btnp(4) or btnp(5) then
-        start_game = true
-        blink.speed = 1
-    end
+ if btnp(4) or btnp(5) then
+  start_game = true
+  blink.speed = 1
+ end
     blink.current_frame += 1
     if blink.current_frame % blink.speed == 0 then
         if blink.index + 1 > #blink.colors then
