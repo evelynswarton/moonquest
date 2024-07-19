@@ -1,4 +1,3 @@
---dissolve_speed = 0.55 
 dissolve_respawn_duration = 360
 
 function init_dissolve_blocks()
