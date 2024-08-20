@@ -4,11 +4,14 @@ function menu.init()
   colors={0,2,8,7,8,2},
   index = 0,
   current_frame = 0,
-  speed = 5
+  speed = 10
  }
  start_game = false
  flashes_remaining = 5
+ b=false
 end
+
+bow_on=true
 
 function menu.update()
  if btnp(4) or btnp(5) then
@@ -30,6 +33,10 @@ function menu.update()
    current_state.init()
   end
  end
+ if (btnp(0) or btnp(1)) then
+  bow_on = not bow_on
+  sfx(62,-1,4,2)
+ end
 end
 
 function menu.draw()
@@ -37,4 +44,12 @@ function menu.draw()
  sspr(12*8,0,32,32,32+16,32+16)
  sspr(12*8,32,32,32,32+20,16)
  print("press ❎ to start", 30, 100, blink.colors[blink.index])
+ local c=8
+ if (btn(0) or btn(1)) c=7
+ if bow_on then
+  print("< option 1 >", 40, 108, c)
+ else
+  print("< option 2 >", 40, 108, c)
+  rectfill(51,43,56,47,0)
+ end
 end

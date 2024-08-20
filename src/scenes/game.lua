@@ -17,6 +17,8 @@ function game.update()
  upd_objs(interactive_blocks)
  upd_objs(dissolve_blocks)
  upd_objs(buttons)
+ upd_objs(signs)
+ upd_objs(bows)
  cam_update()
  upd_objs(lasers)
  if (debug_on) debug_update()
@@ -59,6 +61,7 @@ function game.draw()
  drw_objs(interactive_blocks)
  drw_objs(flags)
  spr(player.current_sprite,player.x,player.y,1,1,player.flp)
+ if (bow_on) drw_objs(bows)
  if (debug_on) player_debug_draw()
  if (umbrella_collected) draw_float_meter() 
  drw_objs(signs)
@@ -138,7 +141,10 @@ function game.init()
     splashes = {}
     init_signs()
     player_init(default_spawn_x,default_spawn_y)
+    bows={}
+    add_bow()
     game.reset()
     num_deaths = 0
     controls_on = true
 end
+

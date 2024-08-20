@@ -23,7 +23,7 @@ acceleration = 0.15
 cam_speed = .925
 
 -- debugging constant
-debug_on = true
+debug_on = false
 debug_color = 12
 
 -- flag constants
@@ -33,7 +33,7 @@ block_flag = 5
 umb_spawn_x = 45 * 8
 umb_spawn_y = 35 * 8
 
-if true then
+if false then
  default_spawn_x=91*8
  default_spawn_y=14*8
  umb_spawn_x=default_spawn_x

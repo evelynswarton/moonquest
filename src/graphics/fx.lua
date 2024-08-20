@@ -164,3 +164,33 @@ function add_splash(x_tile, y_tile)
         end
     })
 end
+
+function add_bow()
+ add(bows,{
+  x=0,
+  y=0,
+  ty=0,
+  spd=0.4,
+  pickup_anim=0,
+  draw=function(self)
+   sspr(96,60,5,4,self.x,self.y)
+  end,
+  update=function(self)
+    self.ty=player.y+(player.h/2)-5
+    self.x=player.x-3
+    if player.flp then
+     self.x=player.x+6
+    end
+    --interpolate to ty with t=spd
+    self.y=(self.spd*self.y)+((1-self.spd)*self.ty)
+    --top bound
+    if self.y<self.ty-5 then
+     self.y=self.ty-5
+    end
+    --bottom bound
+    if self.y>self.ty+2 then
+     self.y=self.ty+2
+    end
+  end
+ })
+end

@@ -19,13 +19,17 @@ spk_dat={
 {2,121,28,121,31,2},
 {2,101,9,101,17,4},
 {2,96,17,96,9,4},
-{2,84,3,90,3,2}
+{2,84,3,90,3,2},
+{4,97,3,99,5,8},
+{2,114,8,118,8,4},
+{2,116,9,116,0,4},
+{'n',{106,111,111,110,110,109,109,108,108,106},{0,0,6,6,5,5,4,4,3,3},30}
 }
 
 function add_spk(s)
  if (s[1]==2) add_floating_spike(two_point_path(s[2],s[3],s[4],s[5]),s[6])
  if (s[1]==4) add_floating_spike(four_point_path(s[2],s[3],s[4],s[5]),s[6])
- if (s[1]=='n') add_floating_spike(n_point_path(s[2],s[3],s[4]),s[5])
+ if (s[1]=='n') add_floating_spike(n_point_path(s[2],s[3]),s[4])
 end
 
 function add_all_spikes()
@@ -50,11 +54,13 @@ function four_point_path(x1, y1, x2, y2)
  }
 end
 
-function n_point_path(n,xs,ys)
+function n_point_path(xs,ys)
  path={}
- for i=1,n do 
-  path[i].x=xs[i]*8
-  path[i].y=ys[i]*8
+ for i=1,#xs do 
+  path[i]={
+   x=xs[i]*8,
+   y=ys[i]*8
+  }
  end
  return path
 end

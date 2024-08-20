@@ -5,6 +5,16 @@ function init_signs()
  add_sign('thick fog... biting cold.\nthe wind howls and howls\ncan you hear it?', 19, 34)
  add_sign('these floating moons\nthey shine brightly.\nthey call to you.', 29, 31)
  add_sign('you feel an urge\n\nan insatiable desire\n\nto collect all the moons.', 54, 37)
+ add_sign('will you prevail in these\ntrials? they have taken\nmany before you,\nyou know...',19,43)
+ add_sign('the ancient memory\nof the moon lord\'s\nbloodline...\nyou posses it',21,62)
+ add_sign('you recall building a\ncity, much like this one.\nbut it feels distant,\nlike the memory doesn\'t\nbelong to you...',94,57)
+ add_sign('you are no moon lord\nyou are no moon lord\nyou are no moon lord\nyou are no moon lord\nyou are no moon lord\nyou are no moon lord\nyou are no moon lord\nyou are no moon lord\n...',118,42)
+ add_sign('your fate...\nis it your fate?\nis it yours to change?',125,62)
+ add_sign('the sight of this shrine\nmakes you feel safe\nmakes you feel at home.',72,18)
+ --but those scarlett eyes...
+ --they are not those of a moon lord. those are the eyes of a lord slayer.
+ 
+ --upon your slaugher of the moon queen you
 end
 
 function add_sign(message, x_tile, y_tile, is_moon_counter)
