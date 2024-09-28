@@ -104,16 +104,29 @@ end
 
 function game.init()
     music(30)
-    umbrella_collected = false
-    bg_graphics = {}
+    umbrella_collected, bg_graphics, graphics, moons, 
+        flags, 
+        buttons,
+        floating_spikes,
+        fans,
+        dissolve_blocks,
+        signs,
+        splashes,
+        bows =
+        false, {}, {}, {}, {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
     add_all_lasers()
     for i = 0, 10 do 
         add_circ()
     end
-    graphics = {}
     num_moons_collected = 0
-    moons = {}
-    flags = {}
     for tile_x = 0, 127 do
         for tile_y = 0, 127 do 
             local x, y = tile_x * 8, tile_y * 8
@@ -129,19 +142,12 @@ function game.init()
             end
         end
     end
-    buttons = {}
     add_all_buttons()
-    floating_spikes = {}
     add_all_spikes()
-    fans = {}
     add_all_fans()
-    dissolve_blocks = {}
     init_dissolve_blocks()
-    signs = {}
-    splashes = {}
     init_signs()
     player_init(default_spawn_x,default_spawn_y)
-    bows={}
     add_bow()
     game.reset()
     num_deaths = 0
