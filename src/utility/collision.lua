@@ -59,20 +59,8 @@ function collides_with_map2(x, y, w, h, dir)
 end
 
 function collides_with_map(obj, dir, flag)
-    -- token saving? idek
-    local x = obj.x
-    local y = obj.y
-    local dx = obj.dx
-    local dy = obj.dy
-    local w = obj.w
-    local h = obj.h
-    local hb = obj.hb
-
-    --collision box
-    local x1 = 0
-    local x2 = 0
-    local y1 = 0
-    local y2 = 0
+    local x, y, dx, dy, w, h, hb, x1, x2, y1, y2 =
+        obj.x, obj.y, obj.dx, obj.dy, obj.w, obj.h, obj.hb, 0, 0, 0, 0
 
     --placing collision box
     if dir == "left" then
