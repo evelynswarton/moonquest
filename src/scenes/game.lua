@@ -1,6 +1,8 @@
 function upd_obj(x) x:update() end
 function upd_objs(xs) foreach(xs,upd_obj) end
 
+game_over = false
+
 function game.update()
     player_update()
     player_animate()
@@ -19,6 +21,7 @@ function game.update()
     upd_objs(buttons)
     upd_objs(signs)
     upd_objs(bows)
+    if (game_over) end_screen.update()
     cam_update()
     upd_objs(lasers)
     if (debug_on) debug_update()
@@ -35,6 +38,8 @@ function game.update()
             h=7
         }
         if (touch(player,umbrella_pickup)) umbrella_collected=true
+
+        
         end
 
         function drw_obj(x) x:draw() end
@@ -62,14 +67,15 @@ function game.update()
             drw_objs(flags)
             spr(player.current_sprite,player.x,player.y,1,1,player.flp)
             if (bow_on) drw_objs(bows)
-                if (debug_on) player_debug_draw()
-                    if (umbrella_collected) draw_float_meter() 
-                        drw_objs(signs)
-                        draw_moon_counter(num_moons_collected)
-                        draw_death_counter(num_deaths)
-                        drw_objs(graphics)
-                        if (debug_on) debug_draw()
-                        end
+            if (debug_on) player_debug_draw()
+            if (umbrella_collected) draw_float_meter() 
+            drw_objs(signs)
+            draw_moon_counter(num_moons_collected)
+            draw_death_counter(num_deaths)
+            drw_objs(graphics)
+            if (debug_on) debug_draw()
+            if (game_over) end_screen.draw()
+        end
 
                         function game.reset()
                             local spawn_x,spawn_y,spawn_at_flag=false
@@ -103,7 +109,7 @@ function game.update()
                         end
 
                         function game.init()
-                            --music(30)
+                            music(30)
                             umbrella_collected, bg_graphics, graphics, moons, 
                             flags, 
                             buttons,

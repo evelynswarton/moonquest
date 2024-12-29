@@ -1,4 +1,4 @@
-menu, game, player, cam = {}, {}, {}, {}
+menu, game, end_screen, player, cam = {}, {}, {}, {}, {}
 state = menu
 
 function _init()

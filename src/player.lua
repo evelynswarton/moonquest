@@ -1,8 +1,8 @@
 player = {
     type = 'player',
     current_sprite = 1,
-    x = 0,
-    y = 0,
+    x = default_spawn_x,
+    y = default_spawn_y,
     w = 7,
     h = 7,
     flp = false,
@@ -212,6 +212,10 @@ function player_collider_update()
             num_moons_collected += 1
             add_swoosh(m.x + 0.5 * m.w, m.y + 0.5 * m.h)
             del(moons, m)
+            if #moons < 1 then
+                game_over = true
+                end_screen_init()
+            end
         end
     end
 
