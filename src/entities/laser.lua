@@ -43,8 +43,8 @@ function add_laser(x, y)
             end
         end,
         draw = function(self)
-            spr(59, self.x, self.y + self.y_offset)
-            spr(59, self.x, self.y + self.y_offset - 8)
+            --spr(59, self.x, self.y + self.y_offset)
+            --spr(59, self.x, self.y + self.y_offset - 8)
             if self.is_top then
                 local r = rnd(2)
                 local x, y = self.x + 3.5, self.y - 1

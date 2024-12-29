@@ -1,4 +1,6 @@
 function add_circ()
+
+    
  add(bg_graphics,{
   x=rnd(128),
   y=rnd(128),
@@ -17,4 +19,5 @@ function add_circ()
    if (self.y<0-self.r) self.y=128+self.r 
   end
  })
+
 end

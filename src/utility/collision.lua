@@ -1,7 +1,3 @@
-function collides_with_block(obj, dir)
-    for block in all(interactive_blocks) do
-    end
-end
 --[[
     O*******
     ********
