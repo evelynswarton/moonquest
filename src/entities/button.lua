@@ -1,4 +1,18 @@
-button_dat = {
+--[[
+	Lock:
+		A lock that accepts a key. Then the gate is
+		open via destroying each block in a contiguous
+		region.
+		Attributes:
+				x : int [x tile of lock] 
+				y : int [y tile of lock]
+			xtarg : int [x tile of first block in gate]
+			ytarg : int [y tile of first block in gate]
+
+]]
+
+-- Data for locks
+lockdat = {
 	{ 20, 59, 22, 56 },
 	{ 0, 62, 1, 61 },
 	{ 94, 62, 91, 59 },
@@ -11,7 +25,7 @@ button_dat = {
 	{ 80, 18, 74, 17 },
 }
 function add_all_buttons()
-	foreach(button_dat, function(b)
+	foreach(lockdat, function(b)
 		add_button(b[1], b[2], b[3], b[4])
 	end)
 end

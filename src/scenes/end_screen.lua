@@ -21,6 +21,6 @@ end
 function end_screen.draw()
     if not end_screen.hide then
         local substring=sub(end_screen.text,0,min(flr(end_screen.index),#end_screen.text))
-        draw_rounded_textbox(player.x, player.y, substring)
+        draw_rounded_textbox(0, 0, substring)
     end
 end
