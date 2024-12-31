@@ -215,6 +215,7 @@ function player_collider_update()
             if #moons < 1 then
                 game_over = true
                 end_screen_init()
+                state = end_screen
             end
         end
     end

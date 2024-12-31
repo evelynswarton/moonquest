@@ -23,7 +23,7 @@ acceleration = 0.15
 cam_speed = .925
 
 -- debugging constant
-debug_on = true
+debug_on = false
 debug_color = 12
 
 -- flag constants

@@ -21,7 +21,6 @@ function game.update()
     upd_objs(buttons)
     upd_objs(signs)
     upd_objs(bows)
-    if (game_over) end_screen.update()
     cam_update()
     upd_objs(lasers)
     if (debug_on) debug_update()
@@ -74,7 +73,7 @@ function game.update()
             draw_death_counter(num_deaths)
             drw_objs(graphics)
             if (debug_on) debug_draw()
-            if (game_over) end_screen.draw()
+            
         end
 
                         function game.reset()
@@ -130,7 +129,7 @@ function game.update()
                             {},
                             {},
                             {}
-                            add_all_lasers()
+                            --add_all_lasers()
                             for i = 0, 10 do 
                                 add_circ()
                             end
