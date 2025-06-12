@@ -1,4 +1,3 @@
-# MOON QUEST
 <img src="img/menu.png">
 
 ## Description:
