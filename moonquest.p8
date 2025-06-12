@@ -38,6 +38,7 @@ __lua__
 #include src/utility/debug.lua
 #include src/utility/physics.lua
 #include src/utility/map.lua
+#include src/utility/compression.lua
 
 __gfx__
 00700700077777700000000007777770077777700000777007777770000000000777777070888800000000008000000800700000070000000000000000000000

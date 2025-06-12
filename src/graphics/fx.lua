@@ -101,6 +101,7 @@ function add_swoosh(_x,_y)
 end
 
 function add_rain()
+	--[[
     add(rain,{
         x = flr(rnd(128)),
         y = flr(rnd(128)),
@@ -132,6 +133,7 @@ function add_rain()
             end
         end
     })
+	]]
 end
 
 function add_splashes_at_random(rain_percent)

@@ -27,3 +27,18 @@ function hex(n,digits)
 	end
 	return s
 end
+
+function dehex(str,digits)
+	digits=digits or 2
+	num=0
+	for i=1,digits do
+		cur=sub(mystr,-i,-i)
+		for j=0,16 do
+			if cur==hex_chars[j+1] then
+				num+=j*(16^(i-1))
+				break
+			end
+		end
+	end
+	return num
+end
