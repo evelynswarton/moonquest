@@ -65,5 +65,8 @@ function add_dissolve_block(x, y)
 				end
 			end
 		end,
+		serialize = function(self)
+			return '$x'..self.x_tile..'y'..self.y_tile
+		end
 	})
 end

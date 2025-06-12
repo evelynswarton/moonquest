@@ -112,6 +112,17 @@ function add_floating_spike(path,speed,phase)
   end,
   draw = function(self)
    spr(self.sprite_sheet[self.frame], self.x, self.y)
+  end,
+  serialize = function(self)
+	  -- $ n x1 y1 ... xn yn % spd % phs
+	  local s = '$'..self.path_length
+	  for i=1,self.path_length do
+		  local xi,yi=self.x_path[i],self.y_path[i]
+		  s=s..hex(xi,3)..hex(yi,3)
+	  end
+	  s=s..'%'..self.speed
+	  s=s..'%'..self.t
+	  return s
   end
  })
 end

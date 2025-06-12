@@ -160,34 +160,3 @@ function game.update()
                             controls_on = true
                         end
 
--- fn : serialize_map()
--- returns string encoding
--- all map data
-function serialize_map()
-	local s = 'MAP-TILES:'
-	for tx=0,127 do
-		for ty=0,127 do
-			-- $x[x-tile]y[y-tile]spr[sprite]
-			s=s..
-			  '$'..
-			  'x'..tx..
-			  'y'..ty..
-			  'spr'..mget(tx,ty)	
-		end
-	end
-	s=s..'FLAGS:'
-	for f in all(fans) do
-		-- $x[x-px]y[y-px]f[force]r[rot]
-		s=s..
-		  '$'..
-		  'x'..f.x..
-		  'y'..f.y..
-		  'f'..f.force..
-		  'r'..f.rot..
-	end
-	s=s..'BUTTONS:'
-	for b in all(buttons) do
-	end
-	for spk in all(floating_spikes) do
-	end
-end

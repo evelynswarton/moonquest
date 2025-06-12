@@ -53,6 +53,9 @@ function add_sign(message, x_tile, y_tile, is_moon_counter)
    if self.is_active then
     self.text_index+=0.5
    end
+  end,
+  serialize=function(self)
+	  return '$msg'..self.text..'x'..(self.x/8)..'y'..(self.y/8)
   end
  })
 end

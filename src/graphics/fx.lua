@@ -1,14 +1,17 @@
 function add_dust(_x,_y,_dx,_dy)
     add(graphics,{
+		--[[
         x=_x,
         y=_y,
         dx=_dx,
         dy=_dy,
         r=rnd(3),
+		]]
         draw=function(self)
-            circfill(self.x,self.y,self.r,13)
+         --   circfill(self.x,self.y,self.r,13)
         end,
         update=function(self)
+			--[[
             self.r -= 0.05
             if self.r < 0 then
                 del(graphics, self)
@@ -25,15 +28,19 @@ function add_dust(_x,_y,_dx,_dy)
             end
             self.x += self.dx
             self.y += self.dy
+			]]
         end
     })
 end
 
 function add_wipe(color, speed)
     add(graphics,{
+		--[[
         a = 0,
         b = 0,
+		]]
         draw=function(self)
+			--[[
             local a = self.a
             local b = self.b
             local x = cam.x + 63
@@ -43,8 +50,10 @@ function add_wipe(color, speed)
                 rect(x - i, y - i, x + i, y + i, 8)
                 --fillp()
             end
+			]]
         end,
         update=function(self)
+			--[[
             self.b += 5
             if self.b >= 64 then
                 self.a += 5
@@ -52,12 +61,14 @@ function add_wipe(color, speed)
             if self.a > 128 then
                 del(graphics, self)
             end
+			]]
         end
     })
 end
 
 function add_swoosh(_x,_y)
     add(graphics,{
+		--[[
         x=_x,
         y=_y,
         t=0,
@@ -65,21 +76,26 @@ function add_swoosh(_x,_y)
         phi=4,
         thta=0,
         speed = 0.05,
+		]]
         draw=function(self)
+			--[[
             for i=1,10 do
                 local theta=(0.03*i)+self.thta
                 local phi=(0.1*i)*self.phi
                 local r=self.t
                 circfill(self.x+r*cos(theta),self.y+r*sin(theta),phi,7)
             end
+			]]
         end,
         update=function(self)
+			--[[
             self.t += 1
             self.thta = (self.speed * (self.t))
             if self.phi < 0 then
                 del(graphics, self)
             end
             self.phi -= self.speed
+			]]
         end
     })
 end
