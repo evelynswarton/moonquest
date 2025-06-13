@@ -34,25 +34,15 @@ end
 -- i only have 16 bits
 
 -- 11111110000000000000
-TILE_MASK_X=(1<<7)-1
-TILE_MASK_Y=((1<<6)-1)<<7
--- 00000001111110000000
---TILE_MASK_Y = ((1<<6)-1)<<7
--- 00000001111110000000
---TILE_MASK_SPR = ((1<<7)-1)
-
-function mtile_enc(x,y)
-	log('x'..x..'y'..y..'spr'..mget(x,y))
-	pos_enc=enc95((y<<7)+x,2)
-	spr_enc=enc95(mget(x,y),2)
-	return pos_enc..spr_enc
+function xy_pair_enc(x,y)
+	return enc95(((y<<7)+x),2)
 end
 
-function mtile_dec(s)
-	pos=dec95(sub(s,1,2))
-	x=pos&TILE_MASK_X
-	y=(pos&TILE_MASK_Y)>>7
-	spr=dec95(sub(s,3,4))
-	log('x'..x..'y'..y..'spr'..spr)
-	mset(x,y,spr)	
+PAIR_MASK_X=((1<<7)-1)
+PAIR_MASK_Y=((1<<6)-1)<<7
+function xy_pair_dec(s)
+	xy=dec95(s)
+	x=xy&PAIR_MASK_X
+	y=(xy&PAIR_MASK_Y)>>7
+	return x,y
 end

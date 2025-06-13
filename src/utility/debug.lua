@@ -14,3 +14,6 @@ function debug_draw()
  end
 end
 
+function log(msg)
+	printh(msg,'dat/log')
+end
