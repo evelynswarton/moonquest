@@ -2,12 +2,13 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 
+#include src/utility/compression.lua
 #include src/utility/map.lua
 #include src/utility/math.lua
-#include map_dat.p8l
+
+#include dat/map.p8l
 
 function _init()
-	printh('logging empty_map.p8 as it tries to init map', 'logging', 1)
 	init_map(map_dat)
 	x,y=0,0
 end

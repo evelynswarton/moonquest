@@ -184,6 +184,7 @@ function add_splash(x_tile, y_tile)
 end
 
 function add_bow()
+	--[[
  add(bows,{
   x=0,
   y=0,
@@ -211,4 +212,5 @@ function add_bow()
     end
   end
  })
+ ]]
 end

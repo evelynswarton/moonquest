@@ -10,25 +10,23 @@ function serialize_map()
 			end
 		end
 	end
-	return 'map_dat = \"'..sub(s,0,-2)..'\"'
+	return 'map_dat = [=['..s..']=]'
 end
 
 -- fn : init_map(dat)
 -- decodes string to initialize map
 function init_map(str)
 	log('initializing map..')
-	tiles=split(str)
-	for t in all(tiles) do
-		log('tile:'..t)
-		t=split(t,'%')
-		celx,cely,snum=t[1],t[2],t[3]
-		log('celx:'..celx..',cely:'..cely..',snum:'..snum)
-		mset(celx,cely,snum)
+	offst=0
+	tlstr=sub(str,1,4)
+	while (#tlstr==4) do
+		tlstr=sub(str,1+offst,4+offst)
+		mtile_dec(tlstr)
+		offst+=4
 	end
 end
 
 function log(msg)
-	add(logs,msg)
-	printh(msg,'logging')
+	printh(msg,'dat/log')
 end
 

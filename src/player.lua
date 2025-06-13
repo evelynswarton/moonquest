@@ -458,5 +458,5 @@ function player_die()
     controls_on = false
     pause_controls_start = time()
     game.reset()
-	printh(serialize_map(),'map_dat',1)
+	printh(serialize_map(),'dat/map',1)
 end

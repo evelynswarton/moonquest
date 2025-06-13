@@ -25,18 +25,34 @@ function dec95(s)
 		b=ord(c)-32
 		n+=b*(95^(i-1))
 	end
+	return n
 end
 
+-- x in [0,127]    ~ 7 bits
+-- y in [0,63]     ~ 6 bits
+-- spr in [0,127]  ~ 7 bits
+-- i only have 16 bits
+
+-- 11111110000000000000
+TILE_MASK_X=(1<<7)-1
+TILE_MASK_Y=((1<<6)-1)<<7
+-- 00000001111110000000
+--TILE_MASK_Y = ((1<<6)-1)<<7
+-- 00000001111110000000
+--TILE_MASK_SPR = ((1<<7)-1)
+
 function mtile_enc(x,y)
-	-- x in [0,127]    ~ 7 bits
-	-- y in [0,63]     ~ 6 bits
-	-- snum in [0,127] ~ 7 bits
-	-- 20 bits in total
-	-- [_______,______,_______]
-	--     ^      ^       ^
-	--  x-bits  y-bits  spr-bits
-	--  2^20 < 95^4 so i can use 4 safe chars
-	snum=mget(x,y)
-	r=(x<<13)+(y<<7)+snum
-	return enc95(r,4)
+	log('x'..x..'y'..y..'spr'..mget(x,y))
+	pos_enc=enc95((y<<7)+x,2)
+	spr_enc=enc95(mget(x,y),2)
+	return pos_enc..spr_enc
+end
+
+function mtile_dec(s)
+	pos=dec95(sub(s,1,2))
+	x=pos&TILE_MASK_X
+	y=(pos&TILE_MASK_Y)>>7
+	spr=dec95(sub(s,3,4))
+	log('x'..x..'y'..y..'spr'..spr)
+	mset(x,y,spr)	
 end
